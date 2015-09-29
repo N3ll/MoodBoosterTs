@@ -1,0 +1,16 @@
+{
+    "version": "0.1.0",
+    "command": "grunt",
+    "isShellCommand": true,
+    "tasks": [
+            {
+                "taskName": "run-geny",
+                "args": [
+                   "--geny",
+                   "Nexus5"                      
+                ],
+                "isBuildCommand": true,
+                "problemMatcher": "$msCompile"
+            }
+        ]
+}
