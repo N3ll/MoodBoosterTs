@@ -1,17 +1,18 @@
 <Page loaded="load">
+	
 	<GridLayout columns="*,*" rows="*,*,auto">
-		<!--<Image src="~/images/1.png" stretch="none"  colSpan="2" row="0" horizontalAlignment="center" verticalAlignment="bottom"/>
-		<Label text="{{ question }}" textWrap="true"  colSpan="2" row="0" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20"/>-->
+		
+		<Image src="~/images/1.png" stretch="none"  colSpan="2" row="0" horizontalAlignment="center" verticalAlignment="bottom"/>
+		<Label bindingContext="{{ currentQuestion }}" text="{{ question}}" textWrap="true" colSpan="2" row="0" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20"  marginBottom="20"/>
 
-		<Repeater items="{{ questions }}" colSpan="2" row="1" verticalAlignment="top" horizontalAlignment="left">
-			<!--<Repeater.itemsLayout>
-				<StackLayout orientation="vertical" />
-			</Repeater.itemsLayout>-->
+		<Repeater bindingContext="{{ currentQuestion }}" items="{{ answers }}" colSpan="2" row="1" verticalAlignment="top" horizontalAlignment="left">
 			<Repeater.itemTemplate>
-				<Label text="{{ question }}" tap="saveAnswer" textWrap="true" marginRight="20" marginLeft="20" marginBottom="5" cssClass="{{ isSelected ? 'selected' : 'not-selected' }}" />
+				<Label text="{{ answer }}" tap="saveAnswer" textWrap="true" marginRight="20" marginLeft="20" marginBottom="5" cssClass="{{ isSelected ? 'selected' : 'not-selected' }}" />
 			</Repeater.itemTemplate>
 		</Repeater>
-		<Button col="0" row="2" verticalAlignment="center" horizontalAlignment="center" text="Previous" tap="changeQuestion" visibility="{{ viewPrev }}" />
-		<Button col="1" row="2" verticalAlignment="center" horizontalAlignment="center" text="Next" tap="changeQuestion" visibility="{{ viewNext }}" />
+		<Button col="0" row="2" verticalAlignment="center" horizontalAlignment="center" text="Previous" tap="previousTap" bindingContext="{{ currentQuestion }}" visibility="{{ order === 1  ? 'collapsed' : 'visible'}}"/>
+		<Button col="1" row="2" verticalAlignment="center" horizontalAlignment="center" text="Next" tap="nextTap" bindingContext="{{ currentQuestion }}" visibility="{{ order === 5  ? 'collapsed' : 'visible'}}" />
+
+		<ActivityIndicator busy="{{ isLoading }}" style="width=100 height = 100" colSpan="2" rowSpan="3"/>
 	</GridLayout>
 </Page>

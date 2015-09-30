@@ -7,23 +7,29 @@ export interface User {
 }
 
 interface Answer {
-	answer: String;
-	weight: Number;	
+	answer: string;
+	weight: number;	
 }
 
 interface Question {
-	question: String;
-	order: Number;
-	type: String;
+	question: string;
+	order: number;
+	type: string;
 	answers: Answer[];
 }
 
 interface Jokes {
 	jokes: string;
-	category: Number;
+	category: number;
 }
 
 class AppModel extends Observable {
+	constructor(){
+		super();
+		this.questions;
+	}
+	
+	//property user
 	private _user: User = { email: "user@domain.com", password: "password" };
 	public get user(): User {
 		return this._user;
@@ -34,6 +40,7 @@ class AppModel extends Observable {
 		}
 	}
 
+	//property isLoading
 	private _isLoading: boolean = false;
 	public get isLoading(): boolean {
 		return this._isLoading;
@@ -49,7 +56,8 @@ class AppModel extends Observable {
 			value: value
 		});
 	}
-
+	
+	//property query
 	private _query: any;
 	public get query(): any {
 		if (!this._query) {
@@ -59,17 +67,18 @@ class AppModel extends Observable {
 					"TargetTypeName": "Answers",
 					"Fields": { "Answer": 1, "Weight": 1 }
 				}
-			}).select("Question", "Type", "Answers").order("Order");
+			}).select("Question", "Type", "Answers", "Order").order("Order");
 		}
 
 		return this._query;
 	}
-
+	
+	//property question
 	private _questions: Question[];
 	public get questions(): Question[] {
 		if (!this._questions) {
 			
-			//this.setIsLoading(true);
+			this.setIsLoading(true);
 			console.log("START QUERY Questions")
 			var questionsQuery = el.data("Questions");
 			questionsQuery.get(this.query)
@@ -77,17 +86,20 @@ class AppModel extends Observable {
 					this._questions = [];
 						
 					for (var index = 0; index < data.result.length; index++) {
+						
+						// console.log(JSON.stringify(data.result[index]));
+						
 						//setting the questions
-						var tempQuestion:Question = {question:<String>data.result[index].Question,
-													type:<String>data.result[index].Type,
-													order:<Number>data.result[index].Order,
+						var tempQuestion:Question = { question:<string>data.result[index].Question,
+													type:<string>data.result[index].Type,
+													order:<number>data.result[index].Order,
 													answers:[]
 						}
 						
 						//setting the answers
 						for (var index2 = 0; index2 < data.result[index].Answers.length; index2++) {
-							var tempAnswer:Answer = {answer: <String>data.result[index].Answers[index2].Answer,
-													weight : <Number>data.result[index].Answers[index2].Weight
+							var tempAnswer:Answer = { answer: <string>data.result[index].Answers[index2].Answer,
+													weight : <number>data.result[index].Answers[index2].Weight
 							};
 							
 							tempQuestion.answers.push(tempAnswer);
@@ -96,7 +108,7 @@ class AppModel extends Observable {
 						this._questions.push(tempQuestion);
 					}
 					
-					console.log("END QUERY: " + JSON.stringify(this._questions));
+					// console.log("END QUERY: " + JSON.stringify(this._questions));
 					this.notify({
 						eventName: "propertyChange",
 						propertyName: "questions",
@@ -104,16 +116,38 @@ class AppModel extends Observable {
 						value: this._questions
 					});
 					
-					//this.setIsLoading(false);
+					this.currentQuestion=this._questions[0];
+					this.setIsLoading(false);
+					
 				},
 					function(error) {
 						console.log("error: " + JSON.stringify(error));
 					});
 
-			return this._questions;
+		}
+		
+		return this._questions;
+	}
+	
+	//property currtent question
+	private _currentQuestion: Question;
+	public get currentQuestion():Question{
+		return this._currentQuestion;
+	}
+	
+	public set currentQuestion(value:Question){
+		if(this._currentQuestion!==value){
+			this._currentQuestion=value;
+			this.notify({
+						eventName: "propertyChange",
+						propertyName: "currentQuestion",
+						object: this,
+						value: this._currentQuestion
+					});
 		}
 	}
-
+	
+	//property jokes
 	private _jokes: Jokes;
 	public get jokes(): Jokes {
 		if (!this._jokes) {
