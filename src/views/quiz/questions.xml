@@ -1,7 +1,7 @@
 <Page navigatedTo="navigatedTo">
 
 	<GridLayout columns="*,*" rows="auto,auto,auto,auto,auto,*">
-		<Label text="Progress" row="0"/>
+		<Label text="{{currentQuestionIndex + 1 + ' of ' + questions.length}}" row="0" colSpan="2" horizontalAlignment="center"/>
 		<Progress value="{{ progress }}" maxValue="5" row="1" colSpan="2" />
 		<Image src="~/images/1.png" stretch="none" colSpan="2" row="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0"/>
 		

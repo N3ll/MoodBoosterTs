@@ -171,7 +171,6 @@ export class QuestionsViewModel extends Observable {
 		}
 	}
 	
-	
 	public loadQuestions(){
 		if(!this.util.beginLoading())return;
 		model.getQuestions().then (questions => {
