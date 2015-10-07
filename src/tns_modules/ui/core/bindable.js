@@ -209,6 +209,7 @@ var Binding = (function () {
             var exp = polymerExpressions.PolymerExpressions.getExpression(expression);
             if (exp) {
                 var context = this.source && this.source.get && this.source.get() || global;
+                //console.log("context: %j", context);
                 var model = {};
                 for (var prop in appModule.resources) {
                     if (appModule.resources.hasOwnProperty(prop) && !context.hasOwnProperty(prop)) {

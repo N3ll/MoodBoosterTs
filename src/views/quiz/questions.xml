@@ -1,18 +1,21 @@
-<Page loaded="load">
-	
-	<GridLayout columns="*,*" rows="*,*,auto">
-		
-		<Image src="~/images/1.png" stretch="none"  colSpan="2" row="0" horizontalAlignment="center" verticalAlignment="bottom"/>
-		<Label bindingContext="{{ currentQuestion }}" text="{{ question}}" textWrap="true" colSpan="2" row="0" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20"  marginBottom="20"/>
+<Page navigatedTo="navigatedTo">
 
-		<Repeater bindingContext="{{ currentQuestion }}" items="{{ answers }}" colSpan="2" row="1" verticalAlignment="top" horizontalAlignment="left">
+	<GridLayout columns="*,*" rows="auto,auto,auto,auto,auto,*">
+		<Label text="Progress" row="0"/>
+		<Progress value="{{ progress }}" maxValue="5" row="1" colSpan="2" />
+		<Image src="~/images/1.png" stretch="none" colSpan="2" row="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0"/>
+		
+		<Label bindingContext="{{ currentQuestion }}" text="{{ question}}" textWrap="true" colSpan="2" row="3" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
+
+		<Repeater bindingContext="{{ currentQuestion }}" items="{{ answers }}" colSpan="2" row="4" verticalAlignment="top" horizontalAlignment="left">
 			<Repeater.itemTemplate>
-				<Label text="{{ answer }}" tap="saveAnswer" textWrap="true" marginRight="20" marginLeft="20" marginBottom="5" cssClass="{{ isSelected ? 'selected' : 'not-selected' }}" />
+				<Label text="{{ answer }}" tap="saveAnswerTap" textWrap="true" marginRight="20" marginLeft="20" marginBottom="5" />
 			</Repeater.itemTemplate>
 		</Repeater>
-		<Button col="0" row="2" verticalAlignment="center" horizontalAlignment="center" text="Previous" tap="previousTap" bindingContext="{{ currentQuestion }}" visibility="{{ order === 1  ? 'collapsed' : 'visible'}}"/>
-		<Button col="1" row="2" verticalAlignment="center" horizontalAlignment="center" text="Next" tap="nextTap" bindingContext="{{ currentQuestion }}" visibility="{{ order === 5  ? 'collapsed' : 'visible'}}" />
+		
+		<Button col="0" row="5" verticalAlignment="bottom" horizontalAlignment="center" text="Previous" tap="{{ previousTap }}" visibility="{{ canGoToPrevious | visibilityConverter }}" />
+		<Button col="1" row="5" verticalAlignment="bottom" horizontalAlignment="center" marginBottom="20" text="Next" tap="{{ nextTap }}" visibility="{{ canGoToNext | visibilityConverter }}" />
 
-		<ActivityIndicator busy="{{ isLoading }}" style="width=100 height = 100" colSpan="2" rowSpan="3"/>
+		<ActivityIndicator busy="{{ util.isLoading }}" style="width=100 height = 100" colSpan="2" rowSpan="4" />
 	</GridLayout>
-</Page>
+</Page> 

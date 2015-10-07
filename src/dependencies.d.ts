@@ -29,6 +29,8 @@
 /// <reference path="../typings/nativescript/1.2/ui/button/button.d.ts" />
 /// <reference path="../typings/nativescript/1.2/ui/label/label.d.ts" />
 /// <reference path="../typings/nativescript/1.2/ui/switch/switch.d.ts" />
+/// <reference path="../typings/nativescript/1.2/ui/dialogs/dialogs.d.ts" />
+/// <reference path="../typings/nativescript/1.2/es6-promise.d.ts" />
 
 /// DISABLED reference path="../deps/NativeScript/bin/dist/definitions/android17.d.ts" />
 /// DISABLED reference path="../deps/NativeScript/bin/dist/definitions/ios.d.ts" />
