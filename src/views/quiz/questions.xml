@@ -1,21 +1,24 @@
 <Page navigatedTo="navigatedTo">
 
-	<GridLayout columns="*,*" rows="auto,auto,auto,auto,auto,*">
-		<Label text="{{currentQuestionIndex + 1 + ' of ' + questions.length}}" row="0" colSpan="2" horizontalAlignment="center"/>
+	<GridLayout columns="*,*" rows="auto,auto,*,auto">
+		<Label text="{{currentQuestionIndex + 1 + ' of ' + questions.length}}" row="0" colSpan="2" horizontalAlignment="center" />
 		<Progress value="{{ progress }}" maxValue="5" row="1" colSpan="2" />
-		<Image src="~/images/1.png" stretch="none" colSpan="2" row="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0"/>
-		
-		<Label bindingContext="{{ currentQuestion }}" text="{{ question}}" textWrap="true" colSpan="2" row="3" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
 
-		<Repeater bindingContext="{{ currentQuestion }}" items="{{ answers }}" colSpan="2" row="4" verticalAlignment="top" horizontalAlignment="left">
-			<Repeater.itemTemplate>
-				<Label text="{{ answer }}" tap="saveAnswerTap" textWrap="true" marginRight="20" marginLeft="20" marginBottom="5" />
-			</Repeater.itemTemplate>
-		</Repeater>
-		
-		<Button col="0" row="5" verticalAlignment="bottom" horizontalAlignment="center" text="Previous" tap="{{ previousTap }}" visibility="{{ canGoToPrevious | visibilityConverter }}" />
-		<Button col="1" row="5" verticalAlignment="bottom" horizontalAlignment="center" marginBottom="20" text="Next" tap="{{ nextTap }}" visibility="{{ canGoToNext | visibilityConverter }}" />
+		<ScrollView row="2" colSpan="2">
+			<GridLayout columns="*,*" rows="auto,auto,auto">
+				<Image src="~/images/1.png" stretch="none" colSpan="2" row="0" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
+				<Label bindingContext="{{ currentQuestion }}" text="{{ question}}" textWrap="true" colSpan="2" row="1" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
+				<Repeater bindingContext="{{ currentQuestion }}" items="{{ answers }}" colSpan="2" row="2" verticalAlignment="top" horizontalAlignment="left">
+					<Repeater.itemTemplate>
+						<Label text="{{ answer }}" tap="saveAnswerTap" textWrap="true" marginRight="20" marginLeft="20" marginBottom="5" />
+					</Repeater.itemTemplate>
+				</Repeater>
+			</GridLayout>
+		</ScrollView>
+
+		<Button col="0" row="3" verticalAlignment="bottom" horizontalAlignment="center" text="Previous" tap="{{ previousTap }}" visibility="{{ canGoToPrevious | visibilityConverter }}" />
+		<Button col="1" row="3" verticalAlignment="bottom" horizontalAlignment="center" marginBottom="20" text="Next" tap="{{ nextTap }}" visibility="{{ canGoToNext | visibilityConverter }}" />
 
 		<ActivityIndicator busy="{{ util.isLoading }}" style="width=100 height = 100" colSpan="2" rowSpan="4" />
 	</GridLayout>
-</Page> 
+</Page>
