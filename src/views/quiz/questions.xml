@@ -1,13 +1,12 @@
 <Page navigatedTo="navigatedTo">
-
 	<GridLayout columns="*,*" rows="auto,auto,*,auto">
-		<Label text="{{currentQuestionIndex + 1 + ' of ' + questions.length}}" row="0" colSpan="2" horizontalAlignment="center" />
+		<Label text="{{ currentQuestionIndex + 1 + ' of ' + questions.length }}" row="0" colSpan="2" horizontalAlignment="center" />
 		<Progress value="{{ progress }}" maxValue="5" row="1" colSpan="2" />
 
 		<ScrollView row="2" colSpan="2">
 			<GridLayout columns="*,*" rows="auto,auto,auto">
 				<Image src="~/images/1.png" stretch="none" colSpan="2" row="0" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
-				<Label bindingContext="{{ currentQuestion }}" text="{{ question}}" textWrap="true" colSpan="2" row="1" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
+				<Label bindingContext="{{ currentQuestion }}" text="{{ question }}" textWrap="true" colSpan="2" row="1" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
 				<Repeater bindingContext="{{ currentQuestion }}" items="{{ answers }}" colSpan="2" row="2" verticalAlignment="top" horizontalAlignment="left">
 					<Repeater.itemTemplate>
 						<Label text="{{ answer }}" tap="saveAnswerTap" textWrap="true" marginRight="20" marginLeft="20" marginBottom="5" />

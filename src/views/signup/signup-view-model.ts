@@ -22,13 +22,7 @@ export class SignupViewModel extends Observable {
 	set email(value: string) {
 		if (this._email !== value) {
 			this._email = value;
-
-			this.notify({
-				eventName: "propertyChange",
-				propertyName: "email",
-				object: this,
-				value: value
-			});
+			this.notifyPropertyChange("email",value);
 		}
 	}
 
@@ -39,13 +33,7 @@ export class SignupViewModel extends Observable {
 	set password(value: string) {
 		if (this._password !== value) {
 			this._password = value;
-
-			this.notify({
-				eventName: "propertyChange",
-				propertyName: "password",
-				object: this,
-				value: value
-			});
+			this.notifyPropertyChange("password",value);
 		}
 	}
 	
@@ -56,12 +44,7 @@ export class SignupViewModel extends Observable {
 	public set util(value:Utility){
 		if (this._util !== value){
 			this._util = value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "util",
-						object: this,
-						value: this._util
-					});
+			this.notifyPropertyChange("util",value);
 		}
 	}
 

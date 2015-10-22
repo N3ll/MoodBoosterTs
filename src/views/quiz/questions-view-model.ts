@@ -45,12 +45,7 @@ export class QuestionsViewModel extends Observable {
 	public set questions(value:Question[]){
 		if(this._questions !== value){
 			this._questions = value;
-			this.notify({
-				eventName: "propertyChange",
-				propertyName: "questions",
-				object: this,
-				value: this._questions
-			});
+			this.notifyPropertyChange("questions",value);
 		}
 	}
 	
@@ -65,13 +60,8 @@ export class QuestionsViewModel extends Observable {
 	public set currentQuestion(value){
 		if(this._currentQuestion!==value){
 			this._currentQuestion=value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "currentQuestion",
-						object: this,
-						value: this._currentQuestion
-					});
-				this.checkGoToNextAndPrevious();
+			this.notifyPropertyChange("currentQuestion",value);
+			this.checkGoToNextAndPrevious();
 		}
 	}
 	
@@ -82,12 +72,7 @@ export class QuestionsViewModel extends Observable {
 	public set currentQuestionIndex(value:number){
 		if(this._currentQuestionIndex!==value){
 			this._currentQuestionIndex=value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "currentQuestionIndex",
-						object: this,
-						value: this._currentQuestionIndex
-					});
+			this.notifyPropertyChange("currentQuestionIndex",value);
 		}
 	}
 	
@@ -98,12 +83,7 @@ export class QuestionsViewModel extends Observable {
 	public set canGoToPrevious(value:boolean){
 		if(this._canGoToPrevious!==value){
 			this._canGoToPrevious=value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "canGoToPrevious",
-						object: this,
-						value: this._canGoToPrevious
-					});
+			this.notifyPropertyChange("canGoToPrevious",value);
 		}
 	}
 	
@@ -114,12 +94,7 @@ export class QuestionsViewModel extends Observable {
 	public set canGoToNext(value:boolean){
 		if (this._canGoToNext !== value){
 			this._canGoToNext = value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "canGotToNext",
-						object: this,
-						value: this._canGoToNext
-					});
+			this.notifyPropertyChange("canGotToNext",value);
 		}
 	}
 	
@@ -130,12 +105,7 @@ export class QuestionsViewModel extends Observable {
 	public set util(value:Utility){
 		if (this._util !== value){
 			this._util = value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "util",
-						object: this,
-						value: this._util
-					});
+			this.notifyPropertyChange("util",value);
 		}
 	}
 	
@@ -146,12 +116,7 @@ export class QuestionsViewModel extends Observable {
 	public set sum(value:number){
 		if (this._sum !== value){
 			this._sum = value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "sum",
-						object: this,
-						value: this._sum
-					});
+			this.notifyPropertyChange("sum",value);
 		}
 	}
 	
@@ -162,12 +127,7 @@ export class QuestionsViewModel extends Observable {
 	public set progress(value:number){
 		if (this._progress !== value){
 			this._progress = value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "progress",
-						object: this,
-						value: this._progress
-					});
+			this.notifyPropertyChange("progress",value);
 		}
 	}
 	

@@ -21,12 +21,7 @@ export class JokesViewModel extends Observable{
 	public set jokes(value:Jokes[]){
 		if(this._jokes !== value){
 			this._jokes = value;
-			this.notify({
-				eventName: "propertyChange",
-				propertyName: "jokes",
-				object: this,
-				value: this._jokes
-			});
+			this.notifyPropertyChange("jokes",value);
 		}
 	}
 	
@@ -41,12 +36,7 @@ export class JokesViewModel extends Observable{
 	public set util(value:Utility){
 		if (this._util !== value){
 			this._util = value;
-			this.notify({
-						eventName: "propertyChange",
-						propertyName: "util",
-						object: this,
-						value: this._util
-					});
+			this.notifyPropertyChange("util",value);
 		}
 	}
 	

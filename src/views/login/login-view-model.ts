@@ -23,13 +23,8 @@ export class LoginViewModel extends Observable {
 	set username(value: string) {
 		if (this._username !== value) {
 			this._username = value;
-
-			this.notify({
-				eventName: "propertyChange",
-				propertyName: "username",
-				object: this,
-				value: value
-			});
+			this.notifyPropertyChange("username",value);	
+			console.log("username " + this.username);
 		}
 	}
 
@@ -39,14 +34,9 @@ export class LoginViewModel extends Observable {
 
 	set password(value: string) {
 		if (this._password !== value) {
-			this._password;
-
-			this.notify({
-				eventName: "propertyChange",
-				propertyName: "password",
-				object: this,
-				value: value
-			});
+			this._password = value;
+			this.notifyPropertyChange("password",value);
+			console.log("password " + this.password);
 		}
 	}
 
@@ -57,29 +47,28 @@ export class LoginViewModel extends Observable {
 	public set util(value: Utility) {
 		if (this._util !== value) {
 			this._util = value;
-			this.notify({
-				eventName: "propertyChange",
-				propertyName: "util",
-				object: this,
-				value: this._util
-			});
+			this.notifyPropertyChange("util",value);
 		}
 	}
 	public logIn() {
 		if (this.validate()) {
 			if (!this.util.beginLoading()) return;
 			console.log(`signIn, email: ${this.username}, password: ${this.password}`);
-			var that = this;
 			el.authentication.login(this.username, this.password)
-				.then(function() {
-					that.util.endLoading();
-					console.log(`signIn success, email: ${that.username}, password: ${that.password}`);
+				.then(()=> {
+					this.util.endLoading();
+					console.log(`signIn success, email: ${this.username}, password: ${this.password}`);
 					frameModule.topmost().navigate("./views/options/options");
 				})
-				.catch(function(error) {
+				.catch((error)=> {  
+					dialogsModule.alert({
+						title: "Error",
+						message: "Wrong username or password. Please try again",
+						okButtonText: "OK"
+				});
 					console.log("ERROR: " + error.message);
 					console.log(JSON.stringify(error));
-					that.util.endLoading();
+					this.util.endLoading();
 				});
 		} else {
 			this.util.endLoading();
@@ -104,7 +93,7 @@ export class LoginViewModel extends Observable {
 			dialogsModule.alert({
 				title: "Error",
 				message: "Please enter password",
-				okButton: "OK"
+				okButtonText: "OK"
 			});
 			return false;
 		}
