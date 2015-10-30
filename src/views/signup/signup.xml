@@ -1,13 +1,11 @@
 <Page navigatedTo="navigatedTo">
 	<GridLayout>
-	<StackLayout orientation="vertical">
-		<Image src="~/images/3.png" stretch="none" horizontalAlignment="center" />
-
-		<TextField text="{{ email }}" hint="Email address" keyboardType="email" />
-		<TextField text="{{ password }}" secure="true" hint="Password" />
-
-		<Button text="Sign up" tap="{{ signUp }}" />
-	</StackLayout>
+		<StackLayout orientation="vertical">
+			<Image src="~/images/3.png" width="100" height="100" horizontalAlignment="center"/>
+			<TextField text="{{ email }}" hint="Email address" keyboardType="email" />
+			<TextField text="{{ password }}" secure="true" hint="Password" />
+			<Button text="Sign up" tap="{{ signUp }}" />
+		</StackLayout>
 	<ActivityIndicator busy="{{ util.isLoading }}" style="width=100 height = 100" />
 	</GridLayout>
 </Page>

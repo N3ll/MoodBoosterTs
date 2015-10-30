@@ -7,7 +7,7 @@ module.exports = function(grunt) {
 
     var androidAvd = grunt.option('avd') || "nexus"
     var genyDevice = grunt.option('geny') || "nexus"
-    var iOSDevice = grunt.option('device') || "nexus"
+    var iOSDevice = grunt.option('device')
 
     grunt.initConfig({
         ts: {
