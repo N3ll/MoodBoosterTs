@@ -7,12 +7,17 @@
 			<GridLayout rows="auto,auto,200,auto" cols="auto,*" bindingContext="{{ currentQuestion }}">
 				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
 				<Label  text="{{ question }}" textWrap="true" row="1" colSpan="2" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
-				<Slider row="2" col="0" value="{{ choseAnswer }}" maxValue="{{ answers ? answers.length : 0 }}"  rotate="-45" width="150" horizontalAlignment="left" verticalAlignment="center"/>
-				<!--<Label  text="{{ answers[choseAnswer].answer }}" row="3" colSpan="2"/>-->
-				<Label  text="{{ roundedProperty}}" row="3" colSpan="2"/>
+				
+				<Slider row="2" col="0" value="{{ choseAnswer }}" maxValue="{{ answers ? answers.length : 0 }}"  rotate="-90" width="150" horizontalAlignment="left" verticalAlignment="center"/>
+				<Image src="~/images/f1.png" width="300" height="300" row="2" col="1" horizontalAlignment="right" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
+				<Image id="coffee" src="~/images/coffee.png" width="300" height="300" row="2" col="1" horizontalAlignment="right" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
+				
+				<Button text="Animate Coffee" tap="animate" row="3" colSpan="2"/>
+				<!--<Label  text="{{ answers[choseAnswer].answer }}" row="3" colSpan="2" textWrap="true"/>-->
+				<!--<Label  text="{{ roundedProperty}}" row="3" colSpan="2"/>-->
 					
-					
-				<Label row="3" textWrap="true" text="Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text " />
+<!--					
+				<Label row="3" textWrap="true" text="Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text Very looong text " />-->
 				
 				<!--<Repeater bindingContext="{{ currentQuestion }}" items="{{ answers }}" colSpan="2" row="2" verticalAlignment="top" horizontalAlignment="left">
 					<Repeater.itemTemplate>
