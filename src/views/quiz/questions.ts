@@ -21,7 +21,8 @@ export function saveAnswerTap(args: GestureEventData){
 export function animate(args:GestureEventData){
 	var imgView =<Image> page.getViewById("coffee");
 	imgView.animate({
-    scale: { x: 0, y: 2},
+    scale: { x: 18/19, y: 6/7},
     duration: 3000
-});
+})
+
 }

@@ -10,3 +10,5 @@ declare type UILabel = any;
 declare type UISwitch = any;
 declare type UITextField = any;
 declare type UITextView = any;
+declare type UIImage = any;
+declare type UIImageView = any;

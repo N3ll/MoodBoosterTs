@@ -25,5 +25,12 @@ declare module android {
         export type TextView = any;
         export type Switch = any;
         export type EditText = any;
+        export type ImageView = any;
+    }
+    
+    export module graphics{
+        export type Rect = any;
+        export type Canvas = any;
+        export type Bitmap = any;
     }
 }
