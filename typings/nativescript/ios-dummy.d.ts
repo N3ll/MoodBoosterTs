@@ -12,3 +12,4 @@ declare type UITextField = any;
 declare type UITextView = any;
 declare type UIImage = any;
 declare type UIImageView = any;
+declare type UISlider = any;

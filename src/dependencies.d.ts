@@ -25,6 +25,7 @@
 /// <reference path="../typings/nativescript/1.4/ui/layouts/layout-base.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/gestures/gestures.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/text-base/text-base.d.ts" />
+/// <reference path="../typings/nativescript/1.4/ui/slider/slider.d.ts" />
 /// <reference path="../typings/nativescript/1.4/text/formatted-string.d.ts" />
 /// <reference path="../typings/nativescript/1.4/text/span.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/editable-text-base/editable-text-base.d.ts" />

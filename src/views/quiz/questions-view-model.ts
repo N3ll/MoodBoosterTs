@@ -25,7 +25,7 @@ export class QuestionViewModel extends Observable {
 	public type: string;
 	public answers: Answer[];
 	public id: string;
-	private _choseAnswer: number;
+	private _choseAnswer: number=0;
 	
 	public roundedProperty: number;
 
@@ -56,8 +56,6 @@ export class QuestionViewModel extends Observable {
 			this.answers.push(tempAnswer);
 		}
 	}
-
-
 }
 
 export class QuestionsViewModel extends Observable {

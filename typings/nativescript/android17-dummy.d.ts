@@ -26,6 +26,7 @@ declare module android {
         export type Switch = any;
         export type EditText = any;
         export type ImageView = any;
+        export type SeekBar = any;
     }
     
     export module graphics{
