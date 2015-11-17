@@ -6,6 +6,7 @@ import {GestureEventData } from "ui/gestures"
 import {Image} from "ui/image";
 import {GestureTypes} from "ui/gestures";
 import {Slider} from "ui/slider";
+import {ScrollView} from "ui/scroll-view";
 
 var viewModel: QuestionsViewModel;
 var page;
@@ -16,11 +17,35 @@ export function navigatedTo(args: EventData) {
 	page = <Page>args.object;
 	viewModel = new QuestionsViewModel();
 	page.bindingContext = viewModel;
+	
+	var scroll = <ScrollView>page.getViewById("scroll");
+	
 
 	var slider = <Slider>page.getViewById("slider");
-	console.log(slider.value);
-	slider.value=0;
-	console.log(slider.value);
+	
+	slider.android.setOnTouchListener(new android.view.View.OnTouchListener(
+    {
+		onTouch(view,event) 
+        {
+            var action = event.getAction();
+            switch (action) 
+            {
+            case android.view.MotionEvent.ACTION_DOWN:
+                // Disallow ScrollView to intercept touch events.
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                break;
+
+            case android.view.MotionEvent.ACTION_UP:
+                // Allow ScrollView to intercept touch events.
+                view.getParent().requestDisallowInterceptTouchEvent(false);
+                break;
+            }
+
+            // Handle ListView touch events.
+            view.onTouchEvent(event);
+            return true;
+        }
+    }));
 	
 	imgView = <Image>page.getViewById("coffee");
 	cup = <Image>page.getViewById("cup");

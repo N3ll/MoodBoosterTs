@@ -18,6 +18,8 @@ declare module android {
         export type IMenuItem = any;
         export type ViewGroup = any;
         export type MotionEvent = any;
+        export var MotionEvent:any;
+        export var View:any;
     }
 
     export module widget {
