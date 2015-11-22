@@ -6,6 +6,7 @@
 /// <reference path="../typings/nativescript/1.4/ui/animation/animation.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/image/image.d.ts" />
 /// <reference path="../typings/nativescript/1.4/image-source/image-source.d.ts" />
+/// <reference path="../typings/nativescript/1.4/platform/platform.d.ts" />
 /// <reference path="../typings/nativescript/1.4/application/application.d.ts" />
 /// <reference path="../typings/nativescript/1.4/color/color.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/core/dependency-observable.d.ts" />

@@ -25,8 +25,8 @@ export class QuestionViewModel extends Observable {
 	public type: string;
 	public answers: Answer[];
 	public id: string;
-	private _choseAnswer: number=0;
-	
+	private _choseAnswer: number = 0;
+	public chosenAnswer: Answer;
 	public roundedProperty: number;
 
 	public get choseAnswer(): number {
@@ -36,6 +36,7 @@ export class QuestionViewModel extends Observable {
 	public set choseAnswer(value: number) {
 		this._choseAnswer = value;
 		this.set("roundedProperty", Math.round(value));
+		this.set("chosenAnswer", this.answers[Math.round(value)]);
 	}
 
 	constructor(everliveQuestion: any) {
@@ -47,6 +48,7 @@ export class QuestionViewModel extends Observable {
 		this.id = <string>everliveQuestion.Id;
 		this.choseAnswer = 0;
 
+
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
 				answer: (index2 + 1) + ". " + <string>everliveQuestion.Answers[index2].Answer,
@@ -55,12 +57,13 @@ export class QuestionViewModel extends Observable {
 			};
 			this.answers.push(tempAnswer);
 		}
+		this.chosenAnswer = this.answers[0];
 	}
 }
 
 export class QuestionsViewModel extends Observable {
-	private _questions: Question[];
-	private _currentQuestion: Question;
+	private _questions: QuestionViewModel[];
+	private _currentQuestion: QuestionViewModel;
 	private _currentQuestionIndex: number;
 	private _canGoToNext: boolean;
 	private _canGoToPrevious: boolean;
@@ -68,36 +71,46 @@ export class QuestionsViewModel extends Observable {
 	private _util: Utility;
 	private answeredQuestions;
 	private _progress: number;
-
+	public visibleQ1: string;
+	public visibleQ2: string;
+	public visibleQ3: string;
+	public visibleQ4: string;
+	public visibleQ5: string;
 
 	constructor() {
 		super();
 		this.questions = [];
 		this.currentQuestionIndex = 0;
 		this.util = new Utility();
-		this.loadQuestions();
-		this.checkGoToNextAndPrevious();
 		this.sum = 0;
 		this.answeredQuestions = {};
 		this.progress = 1;
+		this.visibleQ1 = "collapsed";
+		this.visibleQ2 = "collapsed";
+		this.visibleQ3 = "collapsed";
+		this.visibleQ4 = "collapsed";
+		this.visibleQ5 = "collapsed";
+		this.loadQuestions();
+		this.checkGoToNextAndPrevious();
+		this.setVisibleQuestion(this._currentQuestionIndex);
 	}
 
-	public set questions(value: Question[]) {
+	public set questions(value: QuestionViewModel[]) {
 		if (this._questions !== value) {
 			this._questions = value;
 			this.notifyPropertyChange("questions", value);
 		}
 	}
 
-	public get questions(): Question[] {
+	public get questions(): QuestionViewModel[] {
 		return this._questions;
 	}
 
-	public get currentQuestion(): Question {
+	public get currentQuestion(): QuestionViewModel {
 		return this._currentQuestion;
 	}
 
-	public set currentQuestion(value) {
+	public set currentQuestion(value: QuestionViewModel) {
 		if (this._currentQuestion !== value) {
 			this._currentQuestion = value;
 			this.notifyPropertyChange("currentQuestion", value);
@@ -178,11 +191,66 @@ export class QuestionsViewModel extends Observable {
 				var tempQuestion = new QuestionViewModel(questions[index]);
 				this._questions.push(tempQuestion);
 			}
-			this.currentQuestion = this._questions[0];
+			this.currentQuestion = this._questions[this.currentQuestionIndex];
 			this.util.endLoading();
 		}, error => {
 			this.util.endLoading();
 		});
+	}
+
+	public setVisibleQuestion(currentQuestionIndex: number) {
+		switch (currentQuestionIndex) {
+			case 0:
+				console.log("0");
+				this.set("visibleQ1", "visible");
+				this.set("visibleQ2", "collapsed");
+				this.set("visibleQ3", "collapsed");
+				this.set("visibleQ4", "collapsed");
+				this.set("visibleQ5", "collapsed");
+				break;
+			case 1:
+				console.log("1");
+				this.set("visibleQ1", "collapsed");
+				this.set("visibleQ2", "visible");
+				this.set("visibleQ3", "collapsed");
+				this.set("visibleQ4", "collapsed");
+				this.set("visibleQ5", "collapsed");
+				break;
+			case 2:
+				console.log("2");
+				this.set("visibleQ1", "collapsed");
+				this.set("visibleQ2", "collapsed");
+				this.set("visibleQ3", "visible");
+				this.set("visibleQ4", "collapsed");
+				this.set("visibleQ5", "collapsed");
+				break;
+			case 3:
+				console.log("3");
+				this.set("visibleQ1", "collapsed");
+				this.set("visibleQ2", "collapsed");
+				this.set("visibleQ3", "collapsed");
+				this.set("visibleQ4", "visible");
+				this.set("visibleQ5", "collapsed");
+				break;
+			case 4:
+				console.log("4");
+				this.set("visibleQ1", "collapsed");
+				this.set("visibleQ2", "collapsed");
+				this.set("visibleQ3", "collapsed");
+				this.set("visibleQ4", "collapsed");
+				this.set("visibleQ5", "visible");
+				break;
+			default:
+				console.log("default");
+				this.set("visibleQ1", "collapsed");
+				this.set("visibleQ2", "collapsed");
+				this.set("visibleQ3", "collapsed");
+				this.set("visibleQ4", "collapsed");
+				this.set("visibleQ5", "collapsed");
+				break;
+		}
+
+
 	}
 
 	public previousTap(args: EventData) {
@@ -191,7 +259,9 @@ export class QuestionsViewModel extends Observable {
 			this.progress--;
 			console.log("in previous, current index " + this.currentQuestionIndex);
 		}
+		this.calculateSum(this.currentQuestion);
 		this.currentQuestion = this.questions[this.currentQuestionIndex];
+		this.setVisibleQuestion(this.currentQuestionIndex);
 	}
 
 	public nextTap(args: EventData) {
@@ -200,7 +270,9 @@ export class QuestionsViewModel extends Observable {
 			this.progress++;
 			console.log("in next, current index " + this.currentQuestionIndex);
 		}
+		this.calculateSum(this.currentQuestion);
 		this.currentQuestion = this.questions[this.currentQuestionIndex];
+		this.setVisibleQuestion(this.currentQuestionIndex);
 	}
 
 	private checkGoToPrevious() {
@@ -222,6 +294,7 @@ export class QuestionsViewModel extends Observable {
 	private checkGoToNextAndPrevious() {
 		this.checkGoToNext();
 		this.checkGoToPrevious();
+		console.log(this.currentQuestionIndex);
 		console.log("canGoToNext " + this.canGoToNext);
 		console.log("canGoToPrevious " + this.canGoToPrevious);
 	}
@@ -234,14 +307,23 @@ export class QuestionsViewModel extends Observable {
 		}
 	}
 
-	public saveAnswer(selectedQuestion: QuestionViewModel, selectedAnswer: Answer) {
+	public calculateSum(selectedQuestion: QuestionViewModel) {
 		console.log("sum start:" + this.sum);
-		if (this.answeredQuestions[selectedQuestion.id] && this.answeredQuestions[selectedQuestion.id] !== selectedAnswer) {
-			this.sum -= this.answeredQuestions[selectedQuestion.id].weight;
+		console.log("selected question id " + selectedQuestion.id);
+		console.log("the value for question id " + JSON.stringify(this.answeredQuestions[selectedQuestion.id]));
+		console.log("the chosen answer " + JSON.stringify(selectedQuestion.chosenAnswer));
+		console.log("all questions and answers " + JSON.stringify(this.answeredQuestions));
+		if (this.answeredQuestions[selectedQuestion.id]) {
+			if (this.answeredQuestions[selectedQuestion.id] !== selectedQuestion.chosenAnswer) {
+				console.log("here");
+				this.sum -= this.answeredQuestions[selectedQuestion.id].weight;
+				this.sum += selectedQuestion.chosenAnswer.weight;
+				this.answeredQuestions[selectedQuestion.id] = selectedQuestion.chosenAnswer;
+			}
+		} else {
+			this.sum += selectedQuestion.chosenAnswer.weight;
+			this.answeredQuestions[selectedQuestion.id] = selectedQuestion.chosenAnswer;
 		}
-
-		this.sum += selectedAnswer.weight;
-		this.answeredQuestions[selectedQuestion.id] = selectedAnswer;
 		console.log("sum end:" + this.sum);
 	}
 }

@@ -1,5 +1,5 @@
 import {QuestionsViewModel} from "./questions-view-model";
-import {EventData,PropertyChangeData} from "data/observable";
+import {EventData, PropertyChangeData} from "data/observable";
 import {Button} from "ui/button";
 import {Page} from "ui/page";
 import {GestureEventData } from "ui/gestures"
@@ -7,6 +7,7 @@ import {Image} from "ui/image";
 import {GestureTypes} from "ui/gestures";
 import {Slider} from "ui/slider";
 import {ScrollView} from "ui/scroll-view";
+import {device, platformNames} from "platform";
 
 var viewModel: QuestionsViewModel;
 var page;
@@ -17,41 +18,40 @@ export function navigatedTo(args: EventData) {
 	page = <Page>args.object;
 	viewModel = new QuestionsViewModel();
 	page.bindingContext = viewModel;
-	
+
 	var scroll = <ScrollView>page.getViewById("scroll");
-	
+
 
 	var slider = <Slider>page.getViewById("slider");
-	
-	slider.android.setOnTouchListener(new android.view.View.OnTouchListener(
-    {
-		onTouch(view,event) 
-        {
-            var action = event.getAction();
-            switch (action) 
-            {
-            case android.view.MotionEvent.ACTION_DOWN:
-                // Disallow ScrollView to intercept touch events.
-                view.getParent().requestDisallowInterceptTouchEvent(true);
-                break;
 
-            case android.view.MotionEvent.ACTION_UP:
-                // Allow ScrollView to intercept touch events.
-                view.getParent().requestDisallowInterceptTouchEvent(false);
-                break;
-            }
+	if (device.os === platformNames.android) {
+		slider.android.setOnTouchListener(new android.view.View.OnTouchListener(
+			{
+				onTouch(view, event) {
+					var action = event.getAction();
+					switch (action) {
+						case android.view.MotionEvent.ACTION_DOWN:
+							// Disallow ScrollView to intercept touch events.
+							view.getParent().requestDisallowInterceptTouchEvent(true);
+							break;
 
-            // Handle ListView touch events.
-            view.onTouchEvent(event);
-            return true;
-        }
-    }));
-	
+						case android.view.MotionEvent.ACTION_UP:
+							// Allow ScrollView to intercept touch events.
+							view.getParent().requestDisallowInterceptTouchEvent(false);
+							break;
+					}
+
+					// Handle ListView touch events.
+					view.onTouchEvent(event);
+					return true;
+				}
+			}));
+	}
 	imgView = <Image>page.getViewById("coffee");
 	cup = <Image>page.getViewById("cup");
-	
-	slider.on(Slider.propertyChangeEvent, function(args:PropertyChangeData) {
-	animateCup(Math.round(args.value));
+
+	slider.on(Slider.propertyChangeEvent, function(args: PropertyChangeData) {
+		animateCup(Math.round(args.value));
 	});
 }
 
@@ -60,7 +60,7 @@ function animateCup(state: number) {
 		case 0:
 			cup.src = "~/images/f1.png";
 			imgView.animate({
-				opacity:1,
+				opacity: 1,
 				scale: { x: 1, y: 1 },
 				duration: 2000
 			})
@@ -68,7 +68,7 @@ function animateCup(state: number) {
 		case 1:
 			cup.src = "~/images/f2.png";
 			imgView.animate({
-				opacity:1,
+				opacity: 1,
 				scale: { x: 18 / 19, y: 6 / 7 },
 				duration: 2000
 			})
@@ -76,7 +76,7 @@ function animateCup(state: number) {
 		case 2:
 			cup.src = "~/images/f3.png";
 			imgView.animate({
-				opacity:1,
+				opacity: 1,
 				scale: { x: 17 / 19, y: 5 / 7 },
 				duration: 2000
 			})
@@ -85,23 +85,20 @@ function animateCup(state: number) {
 			cup.src = "~/images/f4.png";
 			imgView.animate({
 				// scale: { x: 1 / 2, y: 1/2},
-				opacity:0,
+				opacity: 0,
 				duration: 500
 			})
 			break;
 		default:
-		cup.src = "~/images/f1.png";
+			cup.src = "~/images/f1.png";
 			imgView.animate({
-				opacity:1,
+				opacity: 1,
 				scale: { x: 1, y: 1 },
 				duration: 2000
 			})
 			break;
-		
+
 	}
 }
 
 
-export function saveAnswerTap(args: GestureEventData) {
-	viewModel.saveAnswer(args.view.parent.bindingContext, args.view.bindingContext);
-}
