@@ -8,6 +8,6 @@
 			<Button text="Sign up" tap="{{ signUp }}"/>
 		</StackLayout>
 
-		<ActivityIndicator busy="{{ util.isLoading }}" style="width=100 height = 100" />
+		<ActivityIndicator busy="{{ loadingCounter.isLoading }}" style="width=100 height = 100" />
 	</GridLayout>
 </Page>

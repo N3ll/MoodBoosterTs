@@ -40,7 +40,6 @@ export function navigatedTo(args: EventData) {
 							view.getParent().requestDisallowInterceptTouchEvent(false);
 							break;
 					}
-
 					// Handle ListView touch events.
 					view.onTouchEvent(event);
 					return true;

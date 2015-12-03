@@ -2,18 +2,18 @@ import {Observable} from "data/observable";
 import dialogsModule = require("ui/dialogs");
 import {el} from "../../shared/config";
 import frameModule = require("ui/frame");
-import {Utility} from "../../shared/util";
+import {LoadingCounter} from "../../shared/util";
 
 export class LoginViewModel extends Observable {
 	private _username: string;
 	private _password: string;
-	private _util: Utility;
+	private _loadingCounter: LoadingCounter;
 
 	constructor() {
 		super();
 		this._username = "user@domain.com";
 		this._password = "password";
-		this.util = new Utility();
+		this.loadingCounter = new LoadingCounter();
 	}
 
 	get username(): string {
@@ -40,39 +40,44 @@ export class LoginViewModel extends Observable {
 		}
 	}
 
-	public get util(): Utility {
-		return this._util;
+	public get loadingCounter(): LoadingCounter {
+		return this._loadingCounter;
 	}
 
-	public set util(value: Utility) {
-		if (this._util !== value) {
-			this._util = value;
+	public set loadingCounter(value: LoadingCounter) {
+		if (this._loadingCounter !== value) {
+			this._loadingCounter = value;
 			this.notifyPropertyChange("util",value);
 		}
 	}
+	
 	public logIn() {
-		if (this.validate()) {
-			if (!this.util.beginLoading()) return;
-			console.log(`signIn, email: ${this.username}, password: ${this.password}`);
-			el.authentication.login(this.username, this.password)
-				.then(()=> {
-					this.util.endLoading();
-					console.log(`signIn success, email: ${this.username}, password: ${this.password}`);
-					frameModule.topmost().navigate("./views/options/options");
-				})
-				.catch((error)=> {  
-					dialogsModule.alert({
+		console.log("logIn() called isLoading:" + this.loadingCounter.isLoading);
+		if (this.loadingCounter.isLoading || !this.validate()) return;
+		
+		console.log(`signIn, email: ${this.username}, password: ${this.password}`);
+		this.loadingCounter.beginLoading();
+		console.log("after this.util.beginLoading() isLoading:" + this.loadingCounter.isLoading);	
+		el.authentication.login(this.username, this.password)
+			.then(
+				()=> {
+				this.loadingCounter.endLoading();
+				console.log(`signIn success, email: ${this.username}, password: ${this.password}`);
+				frameModule.topmost().navigate("./views/options/options");
+			})
+			.catch(
+				(error)=> {  
+				this.loadingCounter.endLoading();
+				
+				console.log("ERROR: " + error.message);
+				console.log(JSON.stringify(error));
+					
+				dialogsModule.alert({
 						title: "Error",
 						message: "Wrong username or password. Please try again",
 						okButtonText: "OK"
 				});
-					console.log("ERROR: " + error.message);
-					console.log(JSON.stringify(error));
-					this.util.endLoading();
-				});
-		} else {
-			this.util.endLoading();
-		}
+			});
 	}
 
 	public signUp() {

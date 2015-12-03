@@ -1,5 +1,5 @@
 import {model} from "../../shared/model";
-import {Utility} from "../../shared/util";
+import {LoadingCounter} from "../../shared/util";
 import {Observable} from "data/observable";
 
 
@@ -10,12 +10,12 @@ interface Jokes {
 
 export class JokesViewModel extends Observable{
 	private _jokes:Jokes[];
-	private _util:Utility;
+	private _loadingCounter:LoadingCounter;
 	
 	constructor(){
 		super();
 		this.jokes=[];
-		this.util = new Utility();
+		this.util = new LoadingCounter();
 	}
 	
 	public set jokes(value:Jokes[]){
@@ -29,13 +29,13 @@ export class JokesViewModel extends Observable{
 		return this._jokes;
 	}
 	
-	public get util():Utility{
-		return this._util;
+	public get util():LoadingCounter{
+		return this._loadingCounter;
 	}
 	
-	public set util(value:Utility){
-		if (this._util !== value){
-			this._util = value;
+	public set util(value:LoadingCounter){
+		if (this._loadingCounter !== value){
+			this._loadingCounter = value;
 			this.notifyPropertyChange("util",value);
 		}
 	}

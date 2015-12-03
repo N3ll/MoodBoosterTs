@@ -1,7 +1,7 @@
 import {Observable} from "data/observable";
 import frameModule = require("ui/frame");
 import {model} from "../../shared/model";
-import {Utility} from "../../shared/util";
+import {LoadingCounter} from "../../shared/util";
 import {EventData} from "data/observable";
 import {Label} from "ui/label";
 
@@ -28,6 +28,7 @@ export class QuestionViewModel extends Observable {
 	private _choseAnswer: number = 0;
 	public chosenAnswer: Answer;
 	public roundedProperty: number;
+	public listPickerItems;
 
 	public get choseAnswer(): number {
 		return this._choseAnswer;
@@ -47,6 +48,7 @@ export class QuestionViewModel extends Observable {
 		this.answers = [];
 		this.id = <string>everliveQuestion.Id;
 		this.choseAnswer = 0;
+	
 
 
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
@@ -56,8 +58,19 @@ export class QuestionViewModel extends Observable {
 				id: <string>everliveQuestion.Answers[index2].Id,
 			};
 			this.answers.push(tempAnswer);
+			this.answers[index2]=tempAnswer;
 		}
+		
 		this.chosenAnswer = this.answers[0];
+		
+		// TODO: do this only for list picker questions
+		var listAnswers = this.answers;		
+		this.listPickerItems = {};	
+		this.listPickerItems.length = listAnswers.length;
+		this.listPickerItems.getItem = function(index){
+			console.log("getting item " + index);
+			return listAnswers[index].answer;
+		}
 	}
 }
 
@@ -68,7 +81,7 @@ export class QuestionsViewModel extends Observable {
 	private _canGoToNext: boolean;
 	private _canGoToPrevious: boolean;
 	private _sum: number;
-	private _util: Utility;
+	private _loadingCounter: LoadingCounter;
 	private answeredQuestions;
 	private _progress: number;
 	public visibleQ1: string;
@@ -81,7 +94,7 @@ export class QuestionsViewModel extends Observable {
 		super();
 		this.questions = [];
 		this.currentQuestionIndex = 0;
-		this.util = new Utility();
+		this.util = new LoadingCounter();
 		this.sum = 0;
 		this.answeredQuestions = {};
 		this.progress = 1;
@@ -151,13 +164,13 @@ export class QuestionsViewModel extends Observable {
 		}
 	}
 
-	public get util(): Utility {
-		return this._util;
+	public get util(): LoadingCounter {
+		return this._loadingCounter;
 	}
 
-	public set util(value: Utility) {
-		if (this._util !== value) {
-			this._util = value;
+	public set util(value: LoadingCounter) {
+		if (this._loadingCounter !== value) {
+			this._loadingCounter = value;
 			this.notifyPropertyChange("util", value);
 		}
 	}
@@ -185,14 +198,16 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public loadQuestions() {
-		if (!this.util.beginLoading()) return;
+		if (this.util.isLoading) return;
+		
 		model.getQuestions().then(questions => {
+			this.util.endLoading();
 			for (var index = 0; index < questions.length; index++) {
 				var tempQuestion = new QuestionViewModel(questions[index]);
 				this._questions.push(tempQuestion);
 			}
 			this.currentQuestion = this._questions[this.currentQuestionIndex];
-			this.util.endLoading();
+			
 		}, error => {
 			this.util.endLoading();
 		});
