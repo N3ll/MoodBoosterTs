@@ -48,7 +48,7 @@ export class QuestionViewModel extends Observable {
 		this.answers = [];
 		this.id = <string>everliveQuestion.Id;
 		this.choseAnswer = 0;
-	
+
 
 
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
@@ -58,16 +58,16 @@ export class QuestionViewModel extends Observable {
 				id: <string>everliveQuestion.Answers[index2].Id,
 			};
 			this.answers.push(tempAnswer);
-			this.answers[index2]=tempAnswer;
+			this.answers[index2] = tempAnswer;
 		}
-		
+
 		this.chosenAnswer = this.answers[0];
 		
 		// TODO: do this only for list picker questions
-		var listAnswers = this.answers;		
-		this.listPickerItems = {};	
+		var listAnswers = this.answers;
+		this.listPickerItems = {};
 		this.listPickerItems.length = listAnswers.length;
-		this.listPickerItems.getItem = function(index){
+		this.listPickerItems.getItem = function(index) {
 			console.log("getting item " + index);
 			return listAnswers[index].answer;
 		}
@@ -94,7 +94,7 @@ export class QuestionsViewModel extends Observable {
 		super();
 		this.questions = [];
 		this.currentQuestionIndex = 0;
-		this.util = new LoadingCounter();
+		this.loadingCounter = new LoadingCounter();
 		this.sum = 0;
 		this.answeredQuestions = {};
 		this.progress = 1;
@@ -164,11 +164,11 @@ export class QuestionsViewModel extends Observable {
 		}
 	}
 
-	public get util(): LoadingCounter {
+	public get loadingCounter(): LoadingCounter {
 		return this._loadingCounter;
 	}
 
-	public set util(value: LoadingCounter) {
+	public set loadingCounter(value: LoadingCounter) {
 		if (this._loadingCounter !== value) {
 			this._loadingCounter = value;
 			this.notifyPropertyChange("util", value);
@@ -198,74 +198,30 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public loadQuestions() {
-		if (this.util.isLoading) return;
-		
+		if (this.loadingCounter.isLoading) return;
+
+		this.loadingCounter.beginLoading();
 		model.getQuestions().then(questions => {
-			this.util.endLoading();
+			this.loadingCounter.endLoading();
+			console.log("this.util.endLoading(): " + this.loadingCounter.isLoading);
+			
 			for (var index = 0; index < questions.length; index++) {
 				var tempQuestion = new QuestionViewModel(questions[index]);
 				this._questions.push(tempQuestion);
 			}
 			this.currentQuestion = this._questions[this.currentQuestionIndex];
-			
+			this.setVisibleQuestion(this.currentQuestionIndex);
 		}, error => {
-			this.util.endLoading();
+			this.loadingCounter.endLoading();
 		});
 	}
 
 	public setVisibleQuestion(currentQuestionIndex: number) {
-		switch (currentQuestionIndex) {
-			case 0:
-				console.log("0");
-				this.set("visibleQ1", "visible");
-				this.set("visibleQ2", "collapsed");
-				this.set("visibleQ3", "collapsed");
-				this.set("visibleQ4", "collapsed");
-				this.set("visibleQ5", "collapsed");
-				break;
-			case 1:
-				console.log("1");
-				this.set("visibleQ1", "collapsed");
-				this.set("visibleQ2", "visible");
-				this.set("visibleQ3", "collapsed");
-				this.set("visibleQ4", "collapsed");
-				this.set("visibleQ5", "collapsed");
-				break;
-			case 2:
-				console.log("2");
-				this.set("visibleQ1", "collapsed");
-				this.set("visibleQ2", "collapsed");
-				this.set("visibleQ3", "visible");
-				this.set("visibleQ4", "collapsed");
-				this.set("visibleQ5", "collapsed");
-				break;
-			case 3:
-				console.log("3");
-				this.set("visibleQ1", "collapsed");
-				this.set("visibleQ2", "collapsed");
-				this.set("visibleQ3", "collapsed");
-				this.set("visibleQ4", "visible");
-				this.set("visibleQ5", "collapsed");
-				break;
-			case 4:
-				console.log("4");
-				this.set("visibleQ1", "collapsed");
-				this.set("visibleQ2", "collapsed");
-				this.set("visibleQ3", "collapsed");
-				this.set("visibleQ4", "collapsed");
-				this.set("visibleQ5", "visible");
-				break;
-			default:
-				console.log("default");
-				this.set("visibleQ1", "collapsed");
-				this.set("visibleQ2", "collapsed");
-				this.set("visibleQ3", "collapsed");
-				this.set("visibleQ4", "collapsed");
-				this.set("visibleQ5", "collapsed");
-				break;
+		var index = this.currentQuestion ? (currentQuestionIndex + 1) : -1;
+		for (var i = 1; i <= 5; i++) {
+			let visibility = (i === index) ? "visible" : "collapsed";
+			this.set("visibleQ" + i, visibility);
 		}
-
-
 	}
 
 	public previousTap(args: EventData) {

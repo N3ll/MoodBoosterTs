@@ -26,12 +26,12 @@ export class LoadingCounter extends Observable {
 		if (this._isLoading !== value) {
 			this._isLoading = value;
 			console.log("loading set to: " + value)
-			// this.notify({
-			// 	eventName: "propertyChange",
-			// 	propertyName: "isLoading",
-			// 	object: this,
-			// 	value: value
-			// });
+			this.notify({
+				eventName: "propertyChange",
+				propertyName: "isLoading",
+				object: this,
+				value: value
+			});
 		}
 	}
 
@@ -48,7 +48,8 @@ export class LoadingCounter extends Observable {
 	public endLoading() {
 		if (this._loadingCount > 0) {
 			this._loadingCount--;
-			if (!this._loadingCount) {
+			console.log("loading count changed to " + this._loadingCount);
+			if (this._loadingCount === 0) {
 				console.log("stopped loading to false");
 				this.isLoading = false;
 			}

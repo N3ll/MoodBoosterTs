@@ -14,14 +14,11 @@ var page;
 var imgView: Image;
 var cup: Image;
 
-export function navigatedTo(args: EventData) {
+export function navigatingTo(args: EventData) {
 	page = <Page>args.object;
 	viewModel = new QuestionsViewModel();
 	page.bindingContext = viewModel;
-
-	var scroll = <ScrollView>page.getViewById("scroll");
-
-
+	
 	var slider = <Slider>page.getViewById("slider");
 
 	if (device.os === platformNames.android) {
