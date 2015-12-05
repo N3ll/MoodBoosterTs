@@ -52,7 +52,7 @@
 			<GridLayout rows="auto,auto,*" cols="*,*" bindingContext="{{ currentQuestion }}">
 				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
 				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
-				<ListPicker items="{{listPickerItems}}" row="2" colSpan="2" tap="saveAnswer" />
+				<ListPicker items="{{listPickerItems}}" row="2" colSpan="2" selectedIndex="{{ listPickerProperty }}"/>
 			</GridLayout>
 		</ScrollView>
 

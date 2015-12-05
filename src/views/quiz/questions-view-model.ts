@@ -33,6 +33,7 @@ export class QuestionViewModel extends Observable {
 	public listPickerItems;
 	public answerString: string;
 	private _switchProperty: boolean;
+	private _listPickerProperty:number;
 
 	public get switchProperty(): boolean {
 		return this._switchProperty;
@@ -68,6 +69,17 @@ export class QuestionViewModel extends Observable {
 			this.set("chosenAnswer", this.answers[Math.round(value)])
 		}
 	}
+	
+	public get listPickerProperty(): number {
+		return this._listPickerProperty;
+	}
+
+	public set listPickerProperty(value: number) {
+		this._listPickerProperty = value;
+		if (this.answers[value]) {
+			this.set("chosenAnswer", this.answers[Math.round(value)])
+		}
+	}
 
 	constructor(everliveQuestion: any) {
 		super();
@@ -78,6 +90,7 @@ export class QuestionViewModel extends Observable {
 		this.id = <string>everliveQuestion.Id;
 		this.sliderPropertyAnswer = -1;
 		this.switchProperty = true;
+		
 
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
