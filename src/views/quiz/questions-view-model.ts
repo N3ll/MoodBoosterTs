@@ -4,6 +4,9 @@ import {model} from "../../shared/model";
 import {LoadingCounter} from "../../shared/util";
 import {EventData} from "data/observable";
 import {Label} from "ui/label";
+import {confirm} from "ui/dialogs";
+import {alert} from "ui/dialogs";
+import {Bindable} from "ui/core/bindable"
 
 interface Answer {
 	answer: string;
@@ -25,19 +28,45 @@ export class QuestionViewModel extends Observable {
 	public type: string;
 	public answers: Answer[];
 	public id: string;
-	private _choseAnswer: number = 0;
+	private _sliderPropertyAnswer: number;
 	public chosenAnswer: Answer;
-	public roundedProperty: number;
 	public listPickerItems;
+	public answerString: string;
+	private _switchProperty: boolean;
 
-	public get choseAnswer(): number {
-		return this._choseAnswer;
+	public get switchProperty(): boolean {
+		return this._switchProperty;
 	}
 
-	public set choseAnswer(value: number) {
-		this._choseAnswer = value;
-		this.set("roundedProperty", Math.round(value));
-		this.set("chosenAnswer", this.answers[Math.round(value)]);
+	public set switchProperty(value: boolean) {
+		this._switchProperty = value;
+		if (!value) {
+			confirm({
+				title: "Unbelievable",
+				message: "This is statistically highly unlikely answer. Maybe you didn't get the question. Try again: Do you want to take a selfie?",
+				okButtonText: "Absolutely",
+				cancelButtonText: "Nope"
+			}).then(function(result) {
+				if (result) {
+					// open the camera
+				}
+				else {
+					//generate randon picture with a joke
+				}
+			});
+		}
+	}
+
+	public get sliderPropertyAnswer(): number {
+		return this._sliderPropertyAnswer;
+	}
+
+	public set sliderPropertyAnswer(value: number) {
+		this._sliderPropertyAnswer = value;
+		if (this.answers[value]) {
+			this.set("answerString", this.answers[Math.round(value)].answer);
+			this.set("chosenAnswer", this.answers[Math.round(value)])
+		}
 	}
 
 	constructor(everliveQuestion: any) {
@@ -47,9 +76,8 @@ export class QuestionViewModel extends Observable {
 		this.order = <number>everliveQuestion.Order;
 		this.answers = [];
 		this.id = <string>everliveQuestion.Id;
-		this.choseAnswer = 0;
-
-
+		this.sliderPropertyAnswer = -1;
+		this.switchProperty = true;
 
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
@@ -61,7 +89,9 @@ export class QuestionViewModel extends Observable {
 			this.answers[index2] = tempAnswer;
 		}
 
-		this.chosenAnswer = this.answers[0];
+		if (this.type !== "repeater") {
+			this.set("chosenAnswer", this.answers[0]);
+		}
 		
 		// TODO: do this only for list picker questions
 		var listAnswers = this.answers;
@@ -70,6 +100,17 @@ export class QuestionViewModel extends Observable {
 		this.listPickerItems.getItem = function(index) {
 			console.log("getting item " + index);
 			return listAnswers[index].answer;
+		}
+	}
+
+	public questionIsAnswered(): boolean {
+		if (!this.chosenAnswer) {
+			alert("Come on, pick an answer").then(function() {
+				console.log("Dialog closed!");
+			});
+			return false;
+		} else {
+			return true;
 		}
 	}
 }
@@ -204,7 +245,7 @@ export class QuestionsViewModel extends Observable {
 		model.getQuestions().then(questions => {
 			this.loadingCounter.endLoading();
 			console.log("this.util.endLoading(): " + this.loadingCounter.isLoading);
-			
+
 			for (var index = 0; index < questions.length; index++) {
 				var tempQuestion = new QuestionViewModel(questions[index]);
 				this._questions.push(tempQuestion);
@@ -225,25 +266,29 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public previousTap(args: EventData) {
-		if (this.currentQuestionIndex) {
-			this.currentQuestionIndex--;
-			this.progress--;
-			console.log("in previous, current index " + this.currentQuestionIndex);
+		if (this.currentQuestion.questionIsAnswered()) {
+			if (this.currentQuestionIndex) {
+				this.currentQuestionIndex--;
+				this.progress--;
+				console.log("in previous, current index " + this.currentQuestionIndex);
+			}
+			this.calculateSum(this.currentQuestion);
+			this.currentQuestion = this.questions[this.currentQuestionIndex];
+			this.setVisibleQuestion(this.currentQuestionIndex);
 		}
-		this.calculateSum(this.currentQuestion);
-		this.currentQuestion = this.questions[this.currentQuestionIndex];
-		this.setVisibleQuestion(this.currentQuestionIndex);
 	}
 
 	public nextTap(args: EventData) {
-		if (this.currentQuestionIndex < this.questions.length - 1) {
-			this.currentQuestionIndex++;
-			this.progress++;
-			console.log("in next, current index " + this.currentQuestionIndex);
+		if (this.currentQuestion.questionIsAnswered()) {
+			if (this.currentQuestionIndex < this.questions.length - 1) {
+				this.currentQuestionIndex++;
+				this.progress++;
+				console.log("in next, current index " + this.currentQuestionIndex);
+			}
+			this.calculateSum(this.currentQuestion);
+			this.currentQuestion = this.questions[this.currentQuestionIndex];
+			this.setVisibleQuestion(this.currentQuestionIndex);
 		}
-		this.calculateSum(this.currentQuestion);
-		this.currentQuestion = this.questions[this.currentQuestionIndex];
-		this.setVisibleQuestion(this.currentQuestionIndex);
 	}
 
 	private checkGoToPrevious() {
@@ -278,12 +323,22 @@ export class QuestionsViewModel extends Observable {
 		}
 	}
 
+	public saveAnswer(idAnswer) {
+		this.currentQuestion.answers.forEach(answer => {
+			if (answer.id === idAnswer) {
+				this.currentQuestion.chosenAnswer = answer;
+				console.log("tapped answer is saved")
+			}
+		});
+	}
+
 	public calculateSum(selectedQuestion: QuestionViewModel) {
 		console.log("sum start:" + this.sum);
 		console.log("selected question id " + selectedQuestion.id);
 		console.log("the value for question id " + JSON.stringify(this.answeredQuestions[selectedQuestion.id]));
 		console.log("the chosen answer " + JSON.stringify(selectedQuestion.chosenAnswer));
 		console.log("all questions and answers " + JSON.stringify(this.answeredQuestions));
+		
 		if (this.answeredQuestions[selectedQuestion.id]) {
 			if (this.answeredQuestions[selectedQuestion.id] !== selectedQuestion.chosenAnswer) {
 				console.log("here");
@@ -292,6 +347,7 @@ export class QuestionsViewModel extends Observable {
 				this.answeredQuestions[selectedQuestion.id] = selectedQuestion.chosenAnswer;
 			}
 		} else {
+			console.log("selected answer weight " + selectedQuestion.chosenAnswer.weight)
 			this.sum += selectedQuestion.chosenAnswer.weight;
 			this.answeredQuestions[selectedQuestion.id] = selectedQuestion.chosenAnswer;
 		}

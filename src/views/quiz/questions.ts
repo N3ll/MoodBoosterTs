@@ -2,6 +2,7 @@ import {QuestionsViewModel} from "./questions-view-model";
 import {EventData, PropertyChangeData} from "data/observable";
 import {Button} from "ui/button";
 import {Page} from "ui/page";
+import {Label} from "ui/label";
 import {GestureEventData } from "ui/gestures"
 import {Image} from "ui/image";
 import {GestureTypes} from "ui/gestures";
@@ -18,7 +19,7 @@ export function navigatingTo(args: EventData) {
 	page = <Page>args.object;
 	viewModel = new QuestionsViewModel();
 	page.bindingContext = viewModel;
-	
+
 	var slider = <Slider>page.getViewById("slider");
 
 	if (device.os === platformNames.android) {
@@ -49,6 +50,11 @@ export function navigatingTo(args: EventData) {
 	slider.on(Slider.propertyChangeEvent, function(args: PropertyChangeData) {
 		animateCup(Math.round(args.value));
 	});
+}
+
+export function saveAnswer(args) {
+	console.log("idAnswer " + args.object.idAnswer);
+	viewModel.saveAnswer(args.object.idAnswer);
 }
 
 function animateCup(state: number) {
