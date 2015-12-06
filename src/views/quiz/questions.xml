@@ -16,7 +16,6 @@
 			</GridLayout>
 		</ScrollView>
 
-
 		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ2 }}">
 			<StackLayout orinetation="vertical" bindingContext="{{ currentQuestion }}">
 				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
@@ -32,7 +31,6 @@
 			</StackLayout>
 		</ScrollView>
 
-
 		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ3 }}">
 			<StackLayout orinetation="vertical" bindingContext="{{ currentQuestion }}">
 				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
@@ -45,6 +43,7 @@
 						<Label text="{{ answer }}" idAnswer = "{{ id }}" textWrap="true" tap="saveAnswer" />
 					</Repeater.itemTemplate>
 				</Repeater>
+				<Button text="FINISH" tap="{{ finishQuiz }}"/>
 			</StackLayout>
 		</ScrollView>
 
@@ -69,10 +68,10 @@
 						<Label text="{{ answer }}" textWrap="true" horizontalAlignment="center"/>
 					</Repeater.itemTemplate>
 				</Repeater>
-				<Switch col="2" checked="{{ switchProperty }}" horizontalAlignment="center" />
+				<Switch col="2" checked="false" horizontalAlignment="center" />
+				<Button text="FINISH" tap="{{ finishQuiz }}"/>
 			</StackLayout>
 		</ScrollView>
-
 
 		<Button col="0" row="3" verticalAlignment="bottom" horizontalAlignment="center" text="Previous" tap="{{ previousTap }}" visibility="{{ canGoToPrevious | visibilityConverter }}" />
 		<Button col="1" row="3" verticalAlignment="bottom" horizontalAlignment="center" text="Next" tap="{{ nextTap }}" visibility="{{ canGoToNext | visibilityConverter }}" />

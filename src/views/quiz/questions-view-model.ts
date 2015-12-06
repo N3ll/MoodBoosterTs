@@ -6,7 +6,8 @@ import {EventData} from "data/observable";
 import {Label} from "ui/label";
 import {confirm} from "ui/dialogs";
 import {alert} from "ui/dialogs";
-import {Bindable} from "ui/core/bindable"
+import {takePicture} from "camera";
+
 
 interface Answer {
 	answer: string;
@@ -32,30 +33,39 @@ export class QuestionViewModel extends Observable {
 	public chosenAnswer: Answer;
 	public listPickerItems;
 	public answerString: string;
-	private _switchProperty: boolean;
-	private _listPickerProperty:number;
+	public switchProperty: boolean;
+	private _listPickerProperty: number;
 
-	public get switchProperty(): boolean {
-		return this._switchProperty;
+	public finishQuiz() {
+		console.log("switchProperty value " );
+		// console.log("switchProperty value " + this.switchProperty);
+		// if (!this.switchProperty) {
+		// 	confirm({
+		// 		title: "Unbelievable",
+		// 		message: "This is statistically highly unlikely answer. Maybe you didn't get the question. Try again: Do you want to take a selfie?",
+		// 		okButtonText: "Absolutely",
+		// 		cancelButtonText: "Nope"
+		// 	}).then(result => {
+		// 		if (result) {
+		// 			this.takePicture();
+		// 		}
+		// 		else {
+		// 			//generate randon picture with a joke
+		// 		}
+		// 	});
+		// } else {
+		// 	this.takePicture();
+		// }
 	}
 
-	public set switchProperty(value: boolean) {
-		this._switchProperty = value;
-		if (!value) {
-			confirm({
-				title: "Unbelievable",
-				message: "This is statistically highly unlikely answer. Maybe you didn't get the question. Try again: Do you want to take a selfie?",
-				okButtonText: "Absolutely",
-				cancelButtonText: "Nope"
-			}).then(function(result) {
-				if (result) {
-					// open the camera
-				}
-				else {
-					//generate randon picture with a joke
-				}
-			});
-		}
+	private takePicture() {
+		takePicture({
+			width: 300,
+			height: 300,
+			keepAspectRatio: true
+		}).then(function(picture) {
+			console.log("picture take " + picture);
+		});
 	}
 
 	public get sliderPropertyAnswer(): number {
@@ -69,7 +79,7 @@ export class QuestionViewModel extends Observable {
 			this.set("chosenAnswer", this.answers[Math.round(value)])
 		}
 	}
-	
+
 	public get listPickerProperty(): number {
 		return this._listPickerProperty;
 	}
@@ -90,7 +100,6 @@ export class QuestionViewModel extends Observable {
 		this.id = <string>everliveQuestion.Id;
 		this.sliderPropertyAnswer = -1;
 		this.switchProperty = true;
-		
 
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
@@ -351,7 +360,7 @@ export class QuestionsViewModel extends Observable {
 		console.log("the value for question id " + JSON.stringify(this.answeredQuestions[selectedQuestion.id]));
 		console.log("the chosen answer " + JSON.stringify(selectedQuestion.chosenAnswer));
 		console.log("all questions and answers " + JSON.stringify(this.answeredQuestions));
-		
+
 		if (this.answeredQuestions[selectedQuestion.id]) {
 			if (this.answeredQuestions[selectedQuestion.id] !== selectedQuestion.chosenAnswer) {
 				console.log("here");

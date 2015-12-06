@@ -16,6 +16,7 @@ var imgView: Image;
 var cup: Image;
 
 export function navigatingTo(args: EventData) {
+	console.log("navigatingTo");
 	page = <Page>args.object;
 	viewModel = new QuestionsViewModel();
 	page.bindingContext = viewModel;
