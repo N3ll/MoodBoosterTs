@@ -37,25 +37,24 @@ export class QuestionViewModel extends Observable {
 	private _listPickerProperty: number;
 
 	public finishQuiz() {
-		console.log("switchProperty value " );
-		// console.log("switchProperty value " + this.switchProperty);
-		// if (!this.switchProperty) {
-		// 	confirm({
-		// 		title: "Unbelievable",
-		// 		message: "This is statistically highly unlikely answer. Maybe you didn't get the question. Try again: Do you want to take a selfie?",
-		// 		okButtonText: "Absolutely",
-		// 		cancelButtonText: "Nope"
-		// 	}).then(result => {
-		// 		if (result) {
-		// 			this.takePicture();
-		// 		}
-		// 		else {
-		// 			//generate randon picture with a joke
-		// 		}
-		// 	});
-		// } else {
-		// 	this.takePicture();
-		// }
+		console.log("switchProperty value " + this.switchProperty);
+		if (!this.switchProperty) {
+			confirm({
+				title: "Unbelievable",
+				message: "This is statistically highly unlikely answer. Maybe you didn't get the question. Try again: Do you want to take a selfie?",
+				okButtonText: "Absolutely",
+				cancelButtonText: "Nope"
+			}).then(result => {
+				if (result) {
+					this.takePicture();
+				}
+				else {
+					//generate randon picture with a joke
+				}
+			});
+		} else {
+			this.takePicture();
+		}
 	}
 
 	private takePicture() {
@@ -75,6 +74,8 @@ export class QuestionViewModel extends Observable {
 	public set sliderPropertyAnswer(value: number) {
 		this._sliderPropertyAnswer = value;
 		if (this.answers[value]) {
+			console.log("sliderPropertyAnswer " + value);
+			console.log("Math.round(value) " + Math.round(value));
 			this.set("answerString", this.answers[Math.round(value)].answer);
 			this.set("chosenAnswer", this.answers[Math.round(value)])
 		}

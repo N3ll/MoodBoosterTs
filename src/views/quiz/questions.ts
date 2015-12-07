@@ -54,8 +54,8 @@ export function navigatingTo(args: EventData) {
 }
 
 export function saveAnswer(args) {
-	console.log("idAnswer " + args.object.idAnswer);
-	viewModel.saveAnswer(args.object.idAnswer);
+	console.log("idAnswer " + args.view.idAnswer);
+	viewModel.saveAnswer(args.view.idAnswer);
 }
 
 function animateCup(state: number) {

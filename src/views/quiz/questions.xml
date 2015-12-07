@@ -12,7 +12,8 @@
 				<Image id="coffee" src="~/images/coffee.png" width="200" height="200" row="2" col="1" marginTop="0" marginBottom="0" />
 				<Slider id="slider" row="2" col="0" value="{{ sliderPropertyAnswer }}" maxValue="{{ answers ? answers.length-1 : 0 }}" rotate="-90" width="150" horizontalAlignment="left" verticalAlignment="center" />
 
-				<Label text="{{ answerString }}" row="3" colSpan="2" textWrap="true" />
+				<Label text="{{ sliderPropertyAnswer }}" row="3" colSpan="2" textWrap="true" />
+				<!--<Label text="{{ answerString }}" row="3" colSpan="2" textWrap="true" />-->
 			</GridLayout>
 		</ScrollView>
 
@@ -68,7 +69,7 @@
 						<Label text="{{ answer }}" textWrap="true" horizontalAlignment="center"/>
 					</Repeater.itemTemplate>
 				</Repeater>
-				<Switch col="2" checked="false" horizontalAlignment="center" />
+				<Switch col="2" checked="{{ switchProperty }}" horizontalAlignment="center" />
 				<Button text="FINISH" tap="{{ finishQuiz }}"/>
 			</StackLayout>
 		</ScrollView>
