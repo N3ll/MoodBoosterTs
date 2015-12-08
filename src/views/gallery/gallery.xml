@@ -1,3 +1,10 @@
 <Page>
-	<Label text="This is the gallery!" />
+	<Repeater items="{{ answers }}">
+		<Repeater.itemsLayout>
+			<WrapLayout itemWidth="300" />
+		</Repeater.itemsLayout>
+		<Repeater.itemTemplate>
+			<Label text="{{ answer }}" textWrap="true" horizontalAlignment="center" />
+		</Repeater.itemTemplate>
+	</Repeater>
 </Page>

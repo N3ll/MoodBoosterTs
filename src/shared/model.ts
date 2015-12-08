@@ -45,6 +45,20 @@ class AppModel extends Observable {
 			})
 		});
 	}
+	
+	public getImages(): Promise<any[]>{
+		console.log("getImages() start");
+		
+		return new Promise<any[]>((resolve, reject) => {
+			el.Files.get().then(data => {
+				console.log("getImages success!");
+				resolve(<any[]>data.result);
+			}, error => {
+				console.log("getImages error: " + error);
+				reject(error);
+			})
+		});
+	}
 }
 
 export var model: AppModel = new AppModel();

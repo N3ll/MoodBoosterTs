@@ -7,7 +7,9 @@ import {Label} from "ui/label";
 import {confirm} from "ui/dialogs";
 import {alert} from "ui/dialogs";
 import {takePicture} from "camera";
+import {ImageFormat} from "ui/enums";
 
+import {el} from "../../shared/config";
 
 interface Answer {
 	answer: string;
@@ -46,24 +48,38 @@ export class QuestionViewModel extends Observable {
 				cancelButtonText: "Nope"
 			}).then(result => {
 				if (result) {
-					this.takePicture();
+					console.log("about to take picture dialog");
+					this.makePicture();
 				}
 				else {
 					//generate randon picture with a joke
 				}
 			});
 		} else {
-			this.takePicture();
+			console.log("about to take picture");
+			this.makePicture();
 		}
 	}
 
-	private takePicture() {
+	private makePicture() {
+		console.log("in makePicture()");
 		takePicture({
 			width: 300,
 			height: 300,
 			keepAspectRatio: true
-		}).then(function(picture) {
-			console.log("picture take " + picture);
+		}).then(picture => {
+			console.log("picture is preparing for upload ");
+			var file = {
+				"Filename": Math.random().toString(36).substring(2, 15) + ".jpg",
+				"ContentType": "image/jpeg",
+				"base64": picture.toBase64String(ImageFormat.jpeg, 100)
+			};
+
+			el.Files.create(file,
+				function(data) { console.log("picture uploaded ");},
+				function(error) { console.log("picture not uploaded ");});
+		}, error => {
+			console.log("cannot take picture "+error);
 		});
 	}
 

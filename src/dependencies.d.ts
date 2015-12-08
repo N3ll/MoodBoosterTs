@@ -12,6 +12,7 @@
 /// <reference path="../typings/nativescript/1.4/color/color.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/core/dependency-observable.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/core/proxy.d.ts" />
+/// <reference path="../typings/nativescript/1.4/ui/enums/enums.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/scroll-view/scroll-view.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/core/bindable.d.ts" />
 /// <reference path="../typings/nativescript/1.4/ui/content-view/content-view.d.ts" />
