@@ -22,7 +22,16 @@ export function navigatingTo(args: EventData) {
 	page.bindingContext = viewModel;
 
 	var slider = <Slider>page.getViewById("slider");
+	imgView = <Image>page.getViewById("coffee");
+	cup = <Image>page.getViewById("cup");
 
+	slider.on(Slider.propertyChangeEvent, function(args: PropertyChangeData) {
+		animateCup(Math.round(args.value));
+	});
+}
+export function loaded(args: EventData) {
+	var slider = <Slider>page.getViewById("slider");
+	page = <Page>args.object;
 	if (device.os === platformNames.android) {
 		slider.android.setOnTouchListener(new android.view.View.OnTouchListener(
 			{
@@ -45,13 +54,8 @@ export function navigatingTo(args: EventData) {
 				}
 			}));
 	}
-	imgView = <Image>page.getViewById("coffee");
-	cup = <Image>page.getViewById("cup");
-
-	slider.on(Slider.propertyChangeEvent, function(args: PropertyChangeData) {
-		animateCup(Math.round(args.value));
-	});
 }
+
 
 export function saveAnswer(args) {
 	console.log("idAnswer " + args.view.idAnswer);

@@ -1,4 +1,4 @@
-<Page navigatingTo="navigatingTo">
+<Page navigatingTo="navigatingTo" loaded="loaded">
 	<GridLayout columns="*,*" rows="auto,auto,*,auto">
 		<Label text="{{ currentQuestionIndex + 1 + ' of ' + questions.length }}" row="0" colSpan="2" horizontalAlignment="center" visibility="{{ loadingCounter.isLoading ? 'collapsed' : 'visible' }}" />
 		<Progress value="{{ progress }}" maxValue="5" row="1" colSpan="2" visibility="{{ loadingCounter.isLoading ? 'collapsed' : 'visible' }}" />
@@ -12,8 +12,8 @@
 				<Image id="coffee" src="~/images/coffee.png" width="200" height="200" row="2" col="1" marginTop="0" marginBottom="0" />
 				<Slider id="slider" row="2" col="0" value="{{ sliderPropertyAnswer }}" maxValue="{{ answers ? answers.length-1 : 0 }}" rotate="-90" width="150" horizontalAlignment="left" verticalAlignment="center" />
 
-				<Label text="{{ sliderPropertyAnswer }}" row="3" colSpan="2" textWrap="true" />
-				<!--<Label text="{{ answerString }}" row="3" colSpan="2" textWrap="true" />-->
+				<!--<Label text="{{ sliderPropertyAnswer }}" row="3" colSpan="2" textWrap="true" />-->
+				<Label text="{{ answerString }}" row="3" colSpan="2" textWrap="true" />
 			</GridLayout>
 		</ScrollView>
 
