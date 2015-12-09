@@ -47,7 +47,7 @@ export class LoginViewModel extends Observable {
 	public set loadingCounter(value: LoadingCounter) {
 		if (this._loadingCounter !== value) {
 			this._loadingCounter = value;
-			this.notifyPropertyChange("util",value);
+			this.notifyPropertyChange("loadingCounter",value);
 		}
 	}
 	

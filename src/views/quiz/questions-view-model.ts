@@ -19,23 +19,23 @@ interface Answer {
 
 interface Question {
 	question: string;
-	order: number;
 	type: string;
 	answers: Answer[];
 	id: string;
 }
 
 export class QuestionViewModel extends Observable {
+	public id: string;
 	public question: string;
-	public order: number;
 	public type: string;
 	public answers: Answer[];
-	public id: string;
-	private _sliderPropertyAnswer: number;
 	public chosenAnswer: Answer;
+	
 	public listPickerItems;
 	public answerString: string;
 	public switchProperty: boolean;
+	
+	private _sliderPropertyAnswer: number;
 	private _listPickerProperty: number;
 
 	public finishQuiz() {
@@ -89,11 +89,11 @@ export class QuestionViewModel extends Observable {
 
 	public set sliderPropertyAnswer(value: number) {
 		this._sliderPropertyAnswer = value;
-		if (this.answers[value]) {
-			console.log("sliderPropertyAnswer " + value);
-			console.log("Math.round(value) " + Math.round(value));
-			this.set("answerString", this.answers[Math.round(value)].answer);
-			this.set("chosenAnswer", this.answers[Math.round(value)])
+		var roundedValue = Math.round(value);
+		
+		if (this.answers[roundedValue]) {
+			this.set("answerString", this.answers[roundedValue].answer);
+			this.set("chosenAnswer", this.answers[roundedValue])
 		}
 	}
 
@@ -110,22 +110,18 @@ export class QuestionViewModel extends Observable {
 
 	constructor(everliveQuestion: any) {
 		super();
+		this.id = <string>everliveQuestion.Id;
 		this.question = <string>everliveQuestion.Question;
 		this.type = <string>everliveQuestion.Type;
-		this.order = <number>everliveQuestion.Order;
+		
 		this.answers = [];
-		this.id = <string>everliveQuestion.Id;
-		this.sliderPropertyAnswer = -1;
-		this.switchProperty = true;
-
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
-				answer: (index2 + 1) + ". " + <string>everliveQuestion.Answers[index2].Answer,
-				weight: <number>everliveQuestion.Answers[index2].Weight,
 				id: <string>everliveQuestion.Answers[index2].Id,
+				answer: <string>everliveQuestion.Answers[index2].Answer,
+				weight: <number>everliveQuestion.Answers[index2].Weight,
 			};
 			this.answers.push(tempAnswer);
-			this.answers[index2] = tempAnswer;
 		}
 
 		if (this.type !== "repeater") {
@@ -140,6 +136,9 @@ export class QuestionViewModel extends Observable {
 			console.log("getting item " + index);
 			return listAnswers[index].answer;
 		}
+		
+		this.sliderPropertyAnswer = 0;
+		this.switchProperty = true;
 	}
 
 	public questionIsAnswered(): boolean {
@@ -155,34 +154,26 @@ export class QuestionViewModel extends Observable {
 }
 
 export class QuestionsViewModel extends Observable {
-	private _questions: QuestionViewModel[];
 	private _currentQuestion: QuestionViewModel;
-	private _currentQuestionIndex: number;
 	private _canGoToNext: boolean;
 	private _canGoToPrevious: boolean;
-	private _sum: number;
-	private _loadingCounter: LoadingCounter;
-	private answeredQuestions;
-	private _progress: number;
-	public visibleQ1: string;
-	public visibleQ2: string;
-	public visibleQ3: string;
-	public visibleQ4: string;
-	public visibleQ5: string;
+	
+	private _questions: QuestionViewModel[] = [];
+	private _sum: number = 0;
+	private _currentQuestionIndex: number = 0;
+	private _progress: number = 1;
+	private _loadingCounter: LoadingCounter = new LoadingCounter();
+	private answeredQuestions = {};
+	
+	public visibleQ1: string = "collapsed";
+	public visibleQ2: string = "collapsed";
+	public visibleQ3: string = "collapsed";
+	public visibleQ4: string = "collapsed";
+	public visibleQ5: string = "collapsed";
 
 	constructor() {
 		super();
-		this.questions = [];
-		this.currentQuestionIndex = 0;
-		this.loadingCounter = new LoadingCounter();
-		this.sum = 0;
-		this.answeredQuestions = {};
-		this.progress = 1;
-		this.visibleQ1 = "collapsed";
-		this.visibleQ2 = "collapsed";
-		this.visibleQ3 = "collapsed";
-		this.visibleQ4 = "collapsed";
-		this.visibleQ5 = "collapsed";
+			
 		this.loadQuestions();
 		this.checkGoToNextAndPrevious();
 		this.setVisibleQuestion(this._currentQuestionIndex);
@@ -251,7 +242,7 @@ export class QuestionsViewModel extends Observable {
 	public set loadingCounter(value: LoadingCounter) {
 		if (this._loadingCounter !== value) {
 			this._loadingCounter = value;
-			this.notifyPropertyChange("util", value);
+			this.notifyPropertyChange("loadingCounter", value);
 		}
 	}
 

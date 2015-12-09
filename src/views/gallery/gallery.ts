@@ -12,8 +12,6 @@ import {device, platformNames} from "platform";
 
 var viewModel: GalleryViewModel;
 var page;
-var imgView: Image;
-var cup: Image;
 
 export function navigatingTo(args: EventData) {
 	console.log("navigatingTo");

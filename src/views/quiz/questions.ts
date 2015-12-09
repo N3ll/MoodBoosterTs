@@ -25,8 +25,12 @@ export function navigatingTo(args: EventData) {
 	imgView = <Image>page.getViewById("coffee");
 	cup = <Image>page.getViewById("cup");
 
-	slider.on(Slider.propertyChangeEvent, function(args: PropertyChangeData) {
-		animateCup(Math.round(args.value));
+	// TODO: rethink this
+	slider.on("propertyChange", function(args: PropertyChangeData) {
+		console.log("args.propertyName: " + args.propertyName);
+		if(args.propertyName === "value"){
+			animateCup(Math.round(args.value));
+		}
 	});
 }
 export function loaded(args: EventData) {
