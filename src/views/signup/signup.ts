@@ -4,7 +4,7 @@ import {EventData} from "data/observable";
 
 var viewModel: SignupViewModel;
 
-export function navigatedTo(args:EventData) {
+export function navigatingTo(args:EventData) {
 	var page = <Page>args.object;
 	viewModel = new SignupViewModel();
 	page.bindingContext = viewModel;

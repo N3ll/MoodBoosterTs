@@ -1,4 +1,4 @@
-<Page navigatedTo="navigatingTo">
+<Page navigatingTo="navigatingTo">
 	<GridLayout columns="*,*" rows="auto,auto,*,auto">
 		<Label text="{{ currentQuestionIndex + 1 + ' of ' + questions.length }}" row="0" colSpan="2" horizontalAlignment="center" visibility="{{ loadingCounter.isLoading ? 'collapsed' : 'visible' }}" />
 		<Progress value="{{ progress }}" maxValue="5" row="1" colSpan="2" visibility="{{ loadingCounter.isLoading ? 'collapsed' : 'visible' }}" />

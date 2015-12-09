@@ -1,10 +1,10 @@
-<Page>
-	<Repeater items="{{ answers }}">
+<Page navigatingTo="navigatingTo">
+	<Repeater items="{{ arrayOfPictures }}">
 		<Repeater.itemsLayout>
 			<WrapLayout itemWidth="300" />
 		</Repeater.itemsLayout>
 		<Repeater.itemTemplate>
-			<Label text="{{ answer }}" textWrap="true" horizontalAlignment="center" />
+			<Label text="{{ $value }}" textWrap="true" horizontalAlignment="center" />
 		</Repeater.itemTemplate>
 	</Repeater>
 </Page>
