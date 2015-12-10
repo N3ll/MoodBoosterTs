@@ -26,7 +26,7 @@
 						<StackLayout/>
 					</Repeater.itemsLayout>
 					<Repeater.itemTemplate>
-						<Label text="{{ answer }}" idAnswer = "{{ id }}" textWrap="true" tap="saveAnswer"/>
+						<Label text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer"/>
 					</Repeater.itemTemplate>
 				</Repeater>
 			</StackLayout>
@@ -41,7 +41,7 @@
 						<WrapLayout itemWidth="160" />
 					</Repeater.itemsLayout>
 					<Repeater.itemTemplate>
-						<Label text="{{ answer }}" idAnswer = "{{ id }}" textWrap="true" tap="saveAnswer" />
+						<Label text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" />
 					</Repeater.itemTemplate>
 				</Repeater>
 				<Button text="FINISH" tap="{{ finishQuiz }}"/>
@@ -63,7 +63,7 @@
 				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
 				<Repeater items="{{ answers }}">
 					<Repeater.itemsLayout>
-						<WrapLayout itemWidth="160" />
+						<WrapLayout itemWidth="150" />
 					</Repeater.itemsLayout>
 					<Repeater.itemTemplate>
 						<Label text="{{ answer }}" textWrap="true" horizontalAlignment="center"/>
