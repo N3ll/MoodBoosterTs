@@ -25,7 +25,7 @@ export class LoadingCounter extends Observable {
 	public set isLoading(value: boolean) {
 		if (this._isLoading !== value) {
 			this._isLoading = value;
-			console.log("loading set to: " + value)
+			// console.log("loading set to: " + value)
 			this.notify({
 				eventName: "propertyChange",
 				propertyName: "isLoading",
@@ -37,20 +37,20 @@ export class LoadingCounter extends Observable {
 
 	public beginLoading(): void {
 		if (!this.isLoading) {
-			console.log("set loading to true");
+			// console.log("set loading to true");
 			this.isLoading = true;
 		}
 
 		this._loadingCount++;
-		console.log("beginLoading ended: " + this._loadingCount);
+		// console.log("beginLoading ended: " + this._loadingCount);
 	}
 
 	public endLoading() {
 		if (this._loadingCount > 0) {
 			this._loadingCount--;
-			console.log("loading count changed to " + this._loadingCount);
+			// console.log("loading count changed to " + this._loadingCount);
 			if (this._loadingCount === 0) {
-				console.log("stopped loading to false");
+				// console.log("stopped loading to false");
 				this.isLoading = false;
 			}
 		}

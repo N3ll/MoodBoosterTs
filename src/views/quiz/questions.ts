@@ -27,7 +27,7 @@ export function navigatingTo(args: EventData) {
 
 	// TODO: rethink this
 	slider.on("propertyChange", function(args: PropertyChangeData) {
-		console.log("args.propertyName: " + args.propertyName);
+		// console.log("args.propertyName: " + args.propertyName);
 		if(args.propertyName === "value"){
 			animateCup(Math.round(args.value));
 		}

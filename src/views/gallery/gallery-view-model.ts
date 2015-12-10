@@ -8,13 +8,12 @@ import {fromUrl} from "image-source";
 
 export class GalleryViewModel extends Observable {
 	public arrayOfPictures;
-	public loadingCounter: LoadingCounter;
+	public loadingCounter: LoadingCounter = new LoadingCounter();
+
 
 	constructor() {
 		super();
 		console.log("in the constructor of gallery-view-model");
-		//this.arrayOfPictures=[];
-		this.loadingCounter = new LoadingCounter();
 		this.loadImages();
 	}
 
@@ -30,4 +29,5 @@ export class GalleryViewModel extends Observable {
 			this.loadingCounter.endLoading();
 		});
 	}
+	
 }

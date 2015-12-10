@@ -8,8 +8,8 @@ import {confirm} from "ui/dialogs";
 import {alert} from "ui/dialogs";
 import {takePicture} from "camera";
 import {ImageFormat} from "ui/enums";
-
 import {el} from "../../shared/config";
+import {JokesViewModel} from "../jokes/jokes-view-model";
 
 interface Answer {
 	answer: string;
@@ -30,13 +30,15 @@ export class QuestionViewModel extends Observable {
 	public type: string;
 	public answers: Answer[];
 	public chosenAnswer: Answer;
-	
+
 	public listPickerItems;
 	public answerString: string;
 	public switchProperty: boolean;
-	
+
 	private _sliderPropertyAnswer: number;
 	private _listPickerProperty: number;
+
+	public jokesViewModel = new JokesViewModel();
 
 	public finishQuiz() {
 		console.log("switchProperty value " + this.switchProperty);
@@ -49,7 +51,8 @@ export class QuestionViewModel extends Observable {
 			}).then(result => {
 				if (result) {
 					console.log("about to take picture dialog");
-					this.makePicture();
+					var joke = this.jokesViewModel.getRandomJoke(4);
+					this.makePicture(joke);
 				}
 				else {
 					//generate randon picture with a joke
@@ -57,11 +60,12 @@ export class QuestionViewModel extends Observable {
 			});
 		} else {
 			console.log("about to take picture");
-			this.makePicture();
+			var joke = this.jokesViewModel.getRandomJoke(4);
+			this.makePicture(joke);
 		}
 	}
 
-	private makePicture() {
+	private makePicture(joke) {
 		console.log("in makePicture()");
 		takePicture({
 			width: 300,
@@ -72,14 +76,15 @@ export class QuestionViewModel extends Observable {
 			var file = {
 				"Filename": Math.random().toString(36).substring(2, 15) + ".jpg",
 				"ContentType": "image/jpeg",
-				"base64": picture.toBase64String(ImageFormat.jpeg, 100)
+				"base64": picture.toBase64String(ImageFormat.jpeg, 100),
+				"joke": joke
 			};
 
 			el.Files.create(file,
-				function(data) { console.log("picture uploaded ");},
-				function(error) { console.log("picture not uploaded ");});
+				function(data) { console.log("picture uploaded "); },
+				function(error) { console.log("picture not uploaded "); });
 		}, error => {
-			console.log("cannot take picture "+error);
+			console.log("cannot take picture " + error);
 		});
 	}
 
@@ -90,7 +95,7 @@ export class QuestionViewModel extends Observable {
 	public set sliderPropertyAnswer(value: number) {
 		this._sliderPropertyAnswer = value;
 		var roundedValue = Math.round(value);
-		
+
 		if (this.answers[roundedValue]) {
 			this.set("answerString", this.answers[roundedValue].answer);
 			this.set("chosenAnswer", this.answers[roundedValue])
@@ -114,6 +119,8 @@ export class QuestionViewModel extends Observable {
 		this.question = <string>everliveQuestion.Question;
 		this.type = <string>everliveQuestion.Type;
 		
+		//  console.log("constructor beginning chosenAnswer " + this.chosenAnswer.answer);
+		
 		this.answers = [];
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
@@ -124,24 +131,32 @@ export class QuestionViewModel extends Observable {
 			this.answers.push(tempAnswer);
 		}
 
-		if (this.type !== "repeater") {
-			this.set("chosenAnswer", this.answers[0]);
-		}
+		//  console.log("constructor before if-type chosenAnswer " + this.chosenAnswer.answer);
 		
+
+		if (this.type !== "repeater") {
+			console.log("not repeater " + this.question + " type " + this.type);
+			this.set("chosenAnswer", this.answers[0]);
+		} 
+		
+		//  console.log("constructor after if-type chosenAnswer " + this.chosenAnswer.answer);
 		// TODO: do this only for list picker questions
 		var listAnswers = this.answers;
 		this.listPickerItems = {};
 		this.listPickerItems.length = listAnswers.length;
 		this.listPickerItems.getItem = function(index) {
-			console.log("getting item " + index);
 			return listAnswers[index].answer;
 		}
-		
+
 		this.sliderPropertyAnswer = 0;
 		this.switchProperty = true;
+
+		// console.log("in the end of constructor chosenAnswer " + this.chosenAnswer.answer);
+		
 	}
 
 	public questionIsAnswered(): boolean {
+		console.log("in question is answered " + this.chosenAnswer.answer);
 		if (!this.chosenAnswer) {
 			alert("Come on, pick an answer").then(function() {
 				console.log("Dialog closed!");
@@ -157,23 +172,23 @@ export class QuestionsViewModel extends Observable {
 	private _currentQuestion: QuestionViewModel;
 	private _canGoToNext: boolean;
 	private _canGoToPrevious: boolean;
-	
+
 	private _questions: QuestionViewModel[] = [];
 	private _sum: number = 0;
 	private _currentQuestionIndex: number = 0;
 	private _progress: number = 1;
 	private _loadingCounter: LoadingCounter = new LoadingCounter();
 	private answeredQuestions = {};
-	
+
 	public visibleQ1: string = "collapsed";
 	public visibleQ2: string = "collapsed";
 	public visibleQ3: string = "collapsed";
 	public visibleQ4: string = "collapsed";
 	public visibleQ5: string = "collapsed";
 
+
 	constructor() {
 		super();
-			
 		this.loadQuestions();
 		this.checkGoToNextAndPrevious();
 		this.setVisibleQuestion(this._currentQuestionIndex);
@@ -274,8 +289,6 @@ export class QuestionsViewModel extends Observable {
 		this.loadingCounter.beginLoading();
 		model.getQuestions().then(questions => {
 			this.loadingCounter.endLoading();
-			console.log("this.util.endLoading(): " + this.loadingCounter.isLoading);
-
 			for (var index = 0; index < questions.length; index++) {
 				var tempQuestion = new QuestionViewModel(questions[index]);
 				this._questions.push(tempQuestion);
@@ -296,11 +309,12 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public previousTap(args: EventData) {
+		console.log("in previousTap chosen answer " + this.currentQuestion.chosenAnswer);
 		if (this.currentQuestion.questionIsAnswered()) {
 			if (this.currentQuestionIndex) {
 				this.currentQuestionIndex--;
 				this.progress--;
-				console.log("in previous, current index " + this.currentQuestionIndex);
+				// console.log("in previous, current index " + this.currentQuestionIndex);
 			}
 			this.calculateSum(this.currentQuestion);
 			this.currentQuestion = this.questions[this.currentQuestionIndex];
@@ -309,11 +323,12 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public nextTap(args: EventData) {
+		console.log("in nextTap chosen answer " + this.currentQuestion.chosenAnswer.answer);
 		if (this.currentQuestion.questionIsAnswered()) {
 			if (this.currentQuestionIndex < this.questions.length - 1) {
 				this.currentQuestionIndex++;
 				this.progress++;
-				console.log("in next, current index " + this.currentQuestionIndex);
+				// console.log("in next, current index " + this.currentQuestionIndex);
 			}
 			this.calculateSum(this.currentQuestion);
 			this.currentQuestion = this.questions[this.currentQuestionIndex];
@@ -340,9 +355,9 @@ export class QuestionsViewModel extends Observable {
 	private checkGoToNextAndPrevious() {
 		this.checkGoToNext();
 		this.checkGoToPrevious();
-		console.log(this.currentQuestionIndex);
-		console.log("canGoToNext " + this.canGoToNext);
-		console.log("canGoToPrevious " + this.canGoToPrevious);
+		// console.log(this.currentQuestionIndex);
+		// console.log("canGoToNext " + this.canGoToNext);
+		// console.log("canGoToPrevious " + this.canGoToPrevious);
 	}
 
 	public visibilityConverter(value: boolean) {
@@ -363,25 +378,24 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public calculateSum(selectedQuestion: QuestionViewModel) {
-		console.log("sum start:" + this.sum);
-		console.log("selected question id " + selectedQuestion.id);
-		console.log("the value for question id " + JSON.stringify(this.answeredQuestions[selectedQuestion.id]));
-		console.log("the chosen answer " + JSON.stringify(selectedQuestion.chosenAnswer));
-		console.log("all questions and answers " + JSON.stringify(this.answeredQuestions));
+		// console.log("sum start:" + this.sum);
+		// console.log("selected question id " + selectedQuestion.id);
+		// console.log("the value for question id " + JSON.stringify(this.answeredQuestions[selectedQuestion.id]));
+		// console.log("the chosen answer " + JSON.stringify(selectedQuestion.chosenAnswer));
+		// console.log("all questions and answers " + JSON.stringify(this.answeredQuestions));
 
 		if (this.answeredQuestions[selectedQuestion.id]) {
 			if (this.answeredQuestions[selectedQuestion.id] !== selectedQuestion.chosenAnswer) {
-				console.log("here");
 				this.sum -= this.answeredQuestions[selectedQuestion.id].weight;
 				this.sum += selectedQuestion.chosenAnswer.weight;
 				this.answeredQuestions[selectedQuestion.id] = selectedQuestion.chosenAnswer;
 			}
 		} else {
-			console.log("selected answer weight " + selectedQuestion.chosenAnswer.weight)
+			// console.log("selected answer weight " + selectedQuestion.chosenAnswer.weight)
 			this.sum += selectedQuestion.chosenAnswer.weight;
 			this.answeredQuestions[selectedQuestion.id] = selectedQuestion.chosenAnswer;
 		}
-		console.log("sum end:" + this.sum);
+		// console.log("sum end:" + this.sum);
 	}
 }
 

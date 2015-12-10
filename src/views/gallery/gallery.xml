@@ -5,6 +5,7 @@
 		</Repeater.itemsLayout>
 		<Repeater.itemTemplate>
 			<Image src="{{ Uri }}" stretch="aspectFit"/>
+			<Label text="{{ joke }}"/>
 		</Repeater.itemTemplate>
 	</Repeater>
 </Page>
