@@ -1,10 +1,11 @@
 <Page navigatingTo="navigatingTo">
 	<Repeater items="{{ arrayOfPictures }}">
 		<Repeater.itemsLayout>
-			<WrapLayout itemWidth="300" />
+			<WrapLayout itemWidth="150" />
 		</Repeater.itemsLayout>
 		<Repeater.itemTemplate>
-			<Image imageSource="{{ itemImage }}"/>
+		    <!--<Label text="{{ $value }}"/>-->
+			<Image src="{{ Uri }}"/>
 		</Repeater.itemTemplate>
 	</Repeater>
 </Page>

@@ -9,36 +9,25 @@ import {fromUrl} from "image-source";
 export class GalleryViewModel extends Observable {
 	public arrayOfPictures;
 	public loadingCounter: LoadingCounter;
-	
-	constructor(){
+
+	constructor() {
 		super();
 		console.log("in the constructor of gallery-view-model");
-		this.arrayOfPictures=[];
+		//this.arrayOfPictures=[];
 		this.loadingCounter = new LoadingCounter();
 		this.loadImages();
 	}
-	
+
 	public loadImages() {
 		console.log("in loadImages");
 		if (this.loadingCounter.isLoading) return;
 		this.loadingCounter.beginLoading();
-		
-		model.getImages().then(images => {
-			console.log("images "+JSON.stringify(images));
-			this.loadingCounter.endLoading();
-			console.log("this.util.endLoading(): " + this.loadingCounter.isLoading);
 
-			images.forEach(fileMetadata => {
-				console.log("uri " + fileMetadata.Uri);
-				fromUrl(fileMetadata.Uri).then(result => {
-					var item = {
-						itemImage: result
-					};
-					console.log("itemImage "+JSON.stringify(item));
-					this.arrayOfPictures.push(item);
-				})
-			})}, error => {
-					this.loadingCounter.endLoading();
-				});
+		model.getImages().then(images => {
+			this.loadingCounter.endLoading();
+			this.set("arrayOfPictures", images);
+		}, error => {
+			this.loadingCounter.endLoading();
+		});
 	}
 }
