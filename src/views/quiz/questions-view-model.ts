@@ -70,7 +70,7 @@ export class QuestionViewModel extends Observable {
 		this.id = <string>everliveQuestion.Id;
 		this.question = <string>everliveQuestion.Question;
 		this.type = <string>everliveQuestion.Type;
-		
+
 		this.answers = [];
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
@@ -87,7 +87,7 @@ export class QuestionViewModel extends Observable {
 		} 
 		
 		// TODO: do this only for list picker questions
-		if(this.type === "listpicker"){
+		if (this.type === "listpicker") {
 			var listAnswers = this.answers;
 			this.listPickerItems = {};
 			this.listPickerItems.length = listAnswers.length;
@@ -122,7 +122,7 @@ export class QuestionsViewModel extends Observable {
 	private _progress: number = 1;
 	private _loadingCounter: LoadingCounter = new LoadingCounter();
 	private answeredQuestions = {};
-	
+
 	public jokesViewModel = new JokesViewModel();
 
 	public visibleQ1: string = "collapsed";
@@ -137,7 +137,7 @@ export class QuestionsViewModel extends Observable {
 		this.loadQuestions();
 		this.checkGoToNextAndPrevious();
 		this.setVisibleQuestion(this._currentQuestionIndex);
-	
+
 	}
 
 	public set questions(value: QuestionViewModel[]) {
@@ -320,22 +320,21 @@ export class QuestionsViewModel extends Observable {
 			}
 		});
 	}
-	
-	
+
+
 	private jokeCategoryFromSum(sum: number): number {
-		if (sum >= 4 && sum <7){
+		if (sum >= 4 && sum < 7) {
 			return 1;
-		}else if (sum >= 7 && sum <10){
+		} else if (sum >= 7 && sum < 10) {
 			return 2;
-		}else if (sum >= 10 && sum <13){
+		} else if (sum >= 10 && sum < 13) {
 			return 3;
-		}else if (sum >= 13 && sum <10){
+		} else if (sum >= 13 && sum < 10) {
 			return 4;
 		}
 	}
-	
+
 	public finishQuiz() {
-		
 		if (!this.currentQuestion.switchProperty) {
 			confirm({
 				title: "Unbelievable",
@@ -349,13 +348,22 @@ export class QuestionsViewModel extends Observable {
 					this.makePicture(joke);
 				}
 				else {
-					//generate randon picture with a joke
-					var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));					
-					
+					//generate randon picture with a joke					
+					var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));
+
 					console.log("generate random picture");
-					
+
 					var img = fromFile("~/images/frame.jpg");
 					
+					var navigationEntry = {
+						moduleName: "./views/showPicture/showPicWithJoke",
+						context: { src : img,
+									joke : joke },
+						animated: false
+					};
+					frameModule.topmost().navigate(navigationEntry);
+					
+
 					var file = {
 						"Filename": Math.random().toString(36).substring(2, 15) + ".jpg",
 						"ContentType": "image/jpeg",
@@ -364,14 +372,14 @@ export class QuestionsViewModel extends Observable {
 					};
 
 					el.Files.create(file,
-					function(data) { 
-						console.log("picture uploaded "); 
-						frameModule.topmost().navigate("../showPicture/showPicWithJoke");
-				},
-					function(error) { console.log("picture not uploaded "); });
+						function(data) {
+							console.log("picture uploaded ");
+						},
+						function(error) { console.log("picture not uploaded ");
+					 });
 				}
 			});
-				
+
 		} else {
 			console.log("about to take picture");
 			var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));
@@ -393,6 +401,14 @@ export class QuestionsViewModel extends Observable {
 				"base64": picture.toBase64String(ImageFormat.jpeg, 100),
 				"joke": joke
 			};
+			
+			var navigationEntry = {
+						moduleName: "./views/showPicture/showPicWithJoke",
+						context: { src : picture,
+									joke : joke },
+						animated: false
+					};
+			frameModule.topmost().navigate(navigationEntry);
 
 			el.Files.create(file,
 				function(data) { console.log("picture uploaded "); },
@@ -401,7 +417,7 @@ export class QuestionsViewModel extends Observable {
 			console.log("cannot take picture " + error);
 		});
 	}
-	
+
 
 	public calculateSum(selectedQuestion: QuestionViewModel) {
 		// console.log("sum start:" + this.sum);

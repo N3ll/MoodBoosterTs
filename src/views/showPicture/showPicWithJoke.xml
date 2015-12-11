@@ -1,6 +1,6 @@
-<Page navigatingTo="navigatingTo">
+<Page navigatedTo="navigatedTo">
 	<GridLayout itemWidth="300" itemHeight="300">
-		<Image src="{{ Uri }}"  />
+		<Image src="{{ src }}"  />
 		<Label text="{{ joke }}" verticalAlignment="center" textWrap="true" backgroundColor="{{ joke ?  'white' : 'transparent'}}" />
 	</GridLayout>			
 </Page>
