@@ -44,7 +44,6 @@
 						<Label text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" />
 					</Repeater.itemTemplate>
 				</Repeater>
-				<Button text="FINISH" tap="{{ finishQuiz }}"/>
 			</StackLayout>
 		</ScrollView>
 

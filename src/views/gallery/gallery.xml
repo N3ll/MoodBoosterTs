@@ -1,11 +1,15 @@
 <Page navigatingTo="navigatingTo">
-	<Repeater items="{{ arrayOfPictures }}">
-		<Repeater.itemsLayout>
-			<WrapLayout itemWidth="100" />
-		</Repeater.itemsLayout>
-		<Repeater.itemTemplate>
-			<Image src="{{ Uri }}" stretch="aspectFit"/>
-			<Label text="{{ joke }}"/>
-		</Repeater.itemTemplate>
-	</Repeater>
+	<ScrollView>
+		<Repeater items="{{ arrayOfPictures }}">
+			<Repeater.itemsLayout>
+				<WrapLayout/>
+			</Repeater.itemsLayout>
+			<Repeater.itemTemplate>
+				<GridLayout itemWidth="300" itemHeight="300">
+					<Image src="{{ Uri }}"  />
+					<Label text="{{ joke }}" verticalAlignment="center" textWrap="true" backgroundColor="{{ joke ?  'white' : 'transparent'}}" />
+				</GridLayout>
+			</Repeater.itemTemplate>
+		</Repeater>
+	</ScrollView>
 </Page>

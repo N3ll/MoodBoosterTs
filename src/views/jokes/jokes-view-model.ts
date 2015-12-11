@@ -45,7 +45,6 @@ export class JokesViewModel extends Observable {
 		this.loadingCounter.beginLoading();
 
 		model.getJokes().then(jokes => {
-		console.log("jokes "+JSON.stringify(jokes));
 			
 			this.loadingCounter.endLoading();
 			
@@ -68,13 +67,10 @@ export class JokesViewModel extends Observable {
 		
 		var jokesFromCategory: Joke[] = [];
 		this.jokes.forEach(joke => {
-			console.log("jokes cat"+joke.category);
 			if (joke.category === category) {
 				jokesFromCategory.push(joke);
 			}
 		});
-		console.log("jokesFromCat " + jokesFromCategory);
-		console.log("the joke "+jokesFromCategory[Math.floor((Math.random() * jokesFromCategory.length))].joke);
 		return jokesFromCategory[Math.floor((Math.random() * jokesFromCategory.length))].joke;
 	}
 }

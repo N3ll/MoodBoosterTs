@@ -10,6 +10,8 @@ import {takePicture} from "camera";
 import {ImageFormat} from "ui/enums";
 import {el} from "../../shared/config";
 import {JokesViewModel} from "../jokes/jokes-view-model";
+import {knownFolders, path} from "file-system";
+import {fromFile} from "image-source";
 
 interface Answer {
 	answer: string;
@@ -35,58 +37,8 @@ export class QuestionViewModel extends Observable {
 	public answerString: string;
 	public switchProperty: boolean;
 
-	private _sliderPropertyAnswer: number;
+	private _sliderPropertyAnswer: number = 0;
 	private _listPickerProperty: number;
-
-	public jokesViewModel = new JokesViewModel();
-
-	public finishQuiz() {
-		console.log("switchProperty value " + this.switchProperty);
-		if (!this.switchProperty) {
-			confirm({
-				title: "Unbelievable",
-				message: "This is statistically highly unlikely answer. Maybe you didn't get the question. Try again: Do you want to take a selfie?",
-				okButtonText: "Absolutely",
-				cancelButtonText: "Nope"
-			}).then(result => {
-				if (result) {
-					console.log("about to take picture dialog");
-					var joke = this.jokesViewModel.getRandomJoke(4);
-					this.makePicture(joke);
-				}
-				else {
-					//generate randon picture with a joke
-				}
-			});
-		} else {
-			console.log("about to take picture");
-			var joke = this.jokesViewModel.getRandomJoke(4);
-			this.makePicture(joke);
-		}
-	}
-
-	private makePicture(joke) {
-		console.log("in makePicture()");
-		takePicture({
-			width: 300,
-			height: 300,
-			keepAspectRatio: true
-		}).then(picture => {
-			console.log("picture is preparing for upload ");
-			var file = {
-				"Filename": Math.random().toString(36).substring(2, 15) + ".jpg",
-				"ContentType": "image/jpeg",
-				"base64": picture.toBase64String(ImageFormat.jpeg, 100),
-				"joke": joke
-			};
-
-			el.Files.create(file,
-				function(data) { console.log("picture uploaded "); },
-				function(error) { console.log("picture not uploaded "); });
-		}, error => {
-			console.log("cannot take picture " + error);
-		});
-	}
 
 	public get sliderPropertyAnswer(): number {
 		return this._sliderPropertyAnswer;
@@ -119,8 +71,6 @@ export class QuestionViewModel extends Observable {
 		this.question = <string>everliveQuestion.Question;
 		this.type = <string>everliveQuestion.Type;
 		
-		//  console.log("constructor beginning chosenAnswer " + this.chosenAnswer.answer);
-		
 		this.answers = [];
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
 			var tempAnswer = {
@@ -131,32 +81,25 @@ export class QuestionViewModel extends Observable {
 			this.answers.push(tempAnswer);
 		}
 
-		//  console.log("constructor before if-type chosenAnswer " + this.chosenAnswer.answer);
-		
-
 		if (this.type !== "repeater") {
 			console.log("not repeater " + this.question + " type " + this.type);
 			this.set("chosenAnswer", this.answers[0]);
 		} 
 		
-		//  console.log("constructor after if-type chosenAnswer " + this.chosenAnswer.answer);
 		// TODO: do this only for list picker questions
-		var listAnswers = this.answers;
-		this.listPickerItems = {};
-		this.listPickerItems.length = listAnswers.length;
-		this.listPickerItems.getItem = function(index) {
-			return listAnswers[index].answer;
+		if(this.type === "listpicker"){
+			var listAnswers = this.answers;
+			this.listPickerItems = {};
+			this.listPickerItems.length = listAnswers.length;
+			this.listPickerItems.getItem = function(index) {
+				return listAnswers[index].answer;
+			}
 		}
 
-		this.sliderPropertyAnswer = 0;
 		this.switchProperty = true;
-
-		// console.log("in the end of constructor chosenAnswer " + this.chosenAnswer.answer);
-		
 	}
 
 	public questionIsAnswered(): boolean {
-		console.log("in question is answered " + this.chosenAnswer.answer);
 		if (!this.chosenAnswer) {
 			alert("Come on, pick an answer").then(function() {
 				console.log("Dialog closed!");
@@ -179,6 +122,8 @@ export class QuestionsViewModel extends Observable {
 	private _progress: number = 1;
 	private _loadingCounter: LoadingCounter = new LoadingCounter();
 	private answeredQuestions = {};
+	
+	public jokesViewModel = new JokesViewModel();
 
 	public visibleQ1: string = "collapsed";
 	public visibleQ2: string = "collapsed";
@@ -192,6 +137,7 @@ export class QuestionsViewModel extends Observable {
 		this.loadQuestions();
 		this.checkGoToNextAndPrevious();
 		this.setVisibleQuestion(this._currentQuestionIndex);
+	
 	}
 
 	public set questions(value: QuestionViewModel[]) {
@@ -309,7 +255,6 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public previousTap(args: EventData) {
-		console.log("in previousTap chosen answer " + this.currentQuestion.chosenAnswer);
 		if (this.currentQuestion.questionIsAnswered()) {
 			if (this.currentQuestionIndex) {
 				this.currentQuestionIndex--;
@@ -323,7 +268,6 @@ export class QuestionsViewModel extends Observable {
 	}
 
 	public nextTap(args: EventData) {
-		console.log("in nextTap chosen answer " + this.currentQuestion.chosenAnswer.answer);
 		if (this.currentQuestion.questionIsAnswered()) {
 			if (this.currentQuestionIndex < this.questions.length - 1) {
 				this.currentQuestionIndex++;
@@ -376,6 +320,88 @@ export class QuestionsViewModel extends Observable {
 			}
 		});
 	}
+	
+	
+	private jokeCategoryFromSum(sum: number): number {
+		if (sum >= 4 && sum <7){
+			return 1;
+		}else if (sum >= 7 && sum <10){
+			return 2;
+		}else if (sum >= 10 && sum <13){
+			return 3;
+		}else if (sum >= 13 && sum <10){
+			return 4;
+		}
+	}
+	
+	public finishQuiz() {
+		
+		if (!this.currentQuestion.switchProperty) {
+			confirm({
+				title: "Unbelievable",
+				message: "This is statistically highly unlikely answer. Maybe you didn't get the question. Try again: Do you want to take a selfie?",
+				okButtonText: "Absolutely",
+				cancelButtonText: "Nope"
+			}).then(result => {
+				if (result) {
+					console.log("about to take picture dialog");
+					var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));
+					this.makePicture(joke);
+				}
+				else {
+					//generate randon picture with a joke
+					var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));					
+					
+					console.log("generate random picture");
+					
+					var img = fromFile("~/images/frame.jpg");
+					
+					var file = {
+						"Filename": Math.random().toString(36).substring(2, 15) + ".jpg",
+						"ContentType": "image/jpeg",
+						"base64": img.toBase64String(ImageFormat.jpeg, 100),
+						"joke": joke
+					};
+
+					el.Files.create(file,
+					function(data) { 
+						console.log("picture uploaded "); 
+						frameModule.topmost().navigate("../showPicture/showPicWithJoke");
+				},
+					function(error) { console.log("picture not uploaded "); });
+				}
+			});
+				
+		} else {
+			console.log("about to take picture");
+			var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));
+			this.makePicture(joke);
+		}
+	}
+
+	private makePicture(joke) {
+		console.log("in makePicture()");
+		takePicture({
+			width: 300,
+			height: 300,
+			keepAspectRatio: true
+		}).then(picture => {
+			console.log("picture is preparing for upload ");
+			var file = {
+				"Filename": Math.random().toString(36).substring(2, 15) + ".jpg",
+				"ContentType": "image/jpeg",
+				"base64": picture.toBase64String(ImageFormat.jpeg, 100),
+				"joke": joke
+			};
+
+			el.Files.create(file,
+				function(data) { console.log("picture uploaded "); },
+				function(error) { console.log("picture not uploaded "); });
+		}, error => {
+			console.log("cannot take picture " + error);
+		});
+	}
+	
 
 	public calculateSum(selectedQuestion: QuestionViewModel) {
 		// console.log("sum start:" + this.sum);

@@ -1,5 +1,6 @@
 /// <reference path="../typings/nativescript/1.4/declarations.d.ts" />
 /// <reference path="../typings/nativescript/1.4/camera/camera.d.ts" />
+/// <reference path="../typings/nativescript/1.4/file-system/file-system.d.ts" />
 /// <reference path="../typings/nativescript/1.4/es-collections.d.ts" />
 /// <reference path="../typings/nativescript/1.4/data/observable/observable.d.ts" />
 /// <reference path="../typings/nativescript/1.4/data/observable-array/observable-array.d.ts" />
