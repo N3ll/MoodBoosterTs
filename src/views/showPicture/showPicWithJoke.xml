@@ -1,6 +1,12 @@
 <Page navigatedTo="navigatedTo">
-	<GridLayout itemWidth="300" itemHeight="300">
-		<Image src="{{ src }}"  />
-		<Label text="{{ joke }}" verticalAlignment="center" textWrap="true" backgroundColor="{{ joke ?  'white' : 'transparent'}}" />
-	</GridLayout>			
+	<ScrollView>
+	<GridLayout columns="*,*" rows="auto,auto">
+		<GridLayout row ="0" colSpan="2" itemWidth="300" itemHeight="300">
+			<Image src="{{ src }}"  />
+			<Label text="{{ joke }}" verticalAlignment="center" textWrap="true" backgroundColor="{{ joke ?  'white' : 'transparent'}}" />
+		</GridLayout>	
+		<Button col="0" row="1" text="Gallery" tap="tapToGallery" class="btnAlign"/>
+		<Button col="1" row="1"  text="Quiz" textWrap="true" tap="tapToQuiz" class="btnAlign"/>	
+	</GridLayout>	
+	</ScrollView>	
 </Page>

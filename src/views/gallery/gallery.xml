@@ -7,7 +7,7 @@
 			<Repeater.itemTemplate>
 				<GridLayout itemWidth="300" itemHeight="300">
 					<Image src="{{ Uri }}"  />
-					<Label text="{{ joke }}" verticalAlignment="center" textWrap="true" backgroundColor="{{ joke ?  'white' : 'transparent'}}" />
+					<Label text="{{ joke }}" class="galleryLabel" textWrap="true" backgroundColor="{{ joke ?  'white' : 'transparent'}}" />
 				</GridLayout>
 			</Repeater.itemTemplate>
 		</Repeater>

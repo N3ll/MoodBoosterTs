@@ -64,7 +64,7 @@ export class JokesViewModel extends Observable {
 
 
 	public getRandomJoke(category: number): string {
-		
+		console.log("in generateRandomJoke "+ category);
 		var jokesFromCategory: Joke[] = [];
 		this.jokes.forEach(joke => {
 			if (joke.category === category) {

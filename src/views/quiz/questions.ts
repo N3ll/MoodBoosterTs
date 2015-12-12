@@ -62,13 +62,6 @@ export function loaded(args: EventData) {
 
 
 export function saveAnswer(args) {
-	console.log("view: " + args.view);
-	console.log("object: " + args.object);
-	
-	console.log("view.idAnswer: " + args.view.idAnswer);
-	console.log("object.idAnswer: " + args.object.idAnswer);
-
-	console.log("idAnswer " + args.object.idAnswer);
 	viewModel.saveAnswer(args.object.idAnswer);
 }
 

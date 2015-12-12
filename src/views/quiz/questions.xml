@@ -5,40 +5,22 @@
 
 		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ1 }}">
 			<GridLayout rows="auto,auto,*,auto" cols="*,*" bindingContext="{{ currentQuestion }}">
-				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
-				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
-
-				<Image id="cup" src="~/images/f1.png" width="200" height="200" row="2" col="1" marginTop="0" marginBottom="0" />
-				<Image id="coffee" src="~/images/coffee.png" width="200" height="200" row="2" col="1" marginTop="0" marginBottom="0" />
-				<Slider id="slider" row="2" col="0" value="{{ sliderPropertyAnswer }}" maxValue="{{ answers ? answers.length-1 : 0 }}" rotate="-90" width="150" horizontalAlignment="left" verticalAlignment="center" />
-
-				<!--<Label text="{{ sliderPropertyAnswer }}" row="3" colSpan="2" textWrap="true" />-->
+				<Image src="~/images/1.png" row="0" colSpan="2" class="minion"/>
+				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" class="title"/>
+				<Image id="cup" src="~/images/f1.png" row="2" col="0" class="coffeeCup"/>
+				<Image id="coffee" src="~/images/coffee.png" row="2" col="0" class="coffeeCup"/>
+				<Slider id="slider" row="2" col="1" value="{{ sliderPropertyAnswer }}" maxValue="{{ answers ? answers.length-1 : 0 }}" rotate="-90"/>
 				<Label text="{{ answerString }}" row="3" colSpan="2" textWrap="true" />
 			</GridLayout>
 		</ScrollView>
 
 		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ2 }}">
 			<StackLayout orinetation="vertical" bindingContext="{{ currentQuestion }}">
-				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
-				<Label text="{{ question }}" textWrap="true" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
+				<Image src="~/images/1.png" row="0" colSpan="2" class="minion"/>
+				<Label text="{{ question }}" textWrap="true" class="title"/>
 				<Repeater items="{{ answers }}">
 					<Repeater.itemsLayout>
 						<StackLayout/>
-					</Repeater.itemsLayout>
-					<Repeater.itemTemplate>
-						<Label text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer"/>
-					</Repeater.itemTemplate>
-				</Repeater>
-			</StackLayout>
-		</ScrollView>
-
-		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ3 }}">
-			<StackLayout orinetation="vertical" bindingContext="{{ currentQuestion }}">
-				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
-				<Label text="{{ question }}" textWrap="true" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
-				<Repeater items="{{ answers }}">
-					<Repeater.itemsLayout>
-						<WrapLayout itemWidth="160" />
 					</Repeater.itemsLayout>
 					<Repeater.itemTemplate>
 						<Label text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" />
@@ -47,10 +29,25 @@
 			</StackLayout>
 		</ScrollView>
 
+		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ3 }}">
+			<StackLayout orinetation="vertical" bindingContext="{{ currentQuestion }}">
+				<Image src="~/images/1.png" row="0" colSpan="2" class="minion"/>
+				<Label text="{{ question }}" textWrap="true" class="title"/>
+				<Repeater items="{{ answers }}">
+					<Repeater.itemsLayout>
+						<WrapLayout  />
+					</Repeater.itemsLayout>
+					<Repeater.itemTemplate>
+						<Button text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" rotate="-10" class="btnAnswers"/>
+					</Repeater.itemTemplate>
+				</Repeater>
+			</StackLayout>
+		</ScrollView>
+
 		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ4 }}">
 			<GridLayout rows="auto,auto,*" cols="*,*" bindingContext="{{ currentQuestion }}">
-				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
-				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
+				<Image src="~/images/1.png" row="0" colSpan="2" class="minion"/>
+				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" class="title"/>
 				<ListPicker items="{{listPickerItems}}" row="2" colSpan="2" selectedIndex="{{ listPickerProperty }}"/>
 			</GridLayout>
 		</ScrollView>
@@ -58,8 +55,8 @@
 		<!--Switch and dialogs -->
 		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ5 }}">
 			<StackLayout orinetation="vertical" bindingContext="{{ currentQuestion }}">
-				<Image src="~/images/1.png" width="150" height="118" row="0" colSpan="2" horizontalAlignment="center" verticalAlignment="bottom" marginTop="0" marginBottom="0" />
-				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" verticalAlignment="bottom" horizontalAlignment="left" marginRight="20" marginLeft="20" marginBottom="20" />
+				<Image src="~/images/1.png" row="0" colSpan="2" class="minion"/>
+				<Label text="{{ question }}" textWrap="true" row="1" colSpan="2" class="title"/>
 				<Repeater items="{{ answers }}">
 					<Repeater.itemsLayout>
 						<WrapLayout itemWidth="150" />
@@ -68,14 +65,14 @@
 						<Label text="{{ answer }}" textWrap="true" horizontalAlignment="center"/>
 					</Repeater.itemTemplate>
 				</Repeater>
-				<Switch col="2" checked="{{ switchProperty }}" horizontalAlignment="center" />
+				<Switch col="2" checked="{{ switchProperty }}" />
 				<Button text="FINISH" tap="{{ finishQuiz }}"/>
 			</StackLayout>
 		</ScrollView>
 
-		<Button col="0" row="3" verticalAlignment="bottom" horizontalAlignment="center" text="Previous" tap="{{ previousTap }}" visibility="{{ canGoToPrevious | visibilityConverter }}" />
-		<Button col="1" row="3" verticalAlignment="bottom" horizontalAlignment="center" text="Next" tap="{{ nextTap }}" visibility="{{ canGoToNext | visibilityConverter }}" />
+		<Button col="0" row="3"  class="btnAlign" text="Previous" tap="{{ previousTap }}" visibility="{{ canGoToPrevious | visibilityConverter }}" />
+		<Button col="1" row="3" class="btnAlign" text="Next" tap="{{ nextTap }}" visibility="{{ canGoToNext | visibilityConverter }}" />
 
-		<ActivityIndicator busy="{{ loadingCounter.isLoading }}" width="100" height="100" colSpan="2" rowSpan="4" />
+		<ActivityIndicator busy="{{ loadingCounter.isLoading }}" class="activityIndicator" colSpan="2" rowSpan="4" />
 	</GridLayout>
 </Page>

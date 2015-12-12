@@ -37,7 +37,7 @@ export class QuestionViewModel extends Observable {
 	public answerString: string;
 	public switchProperty: boolean;
 
-	private _sliderPropertyAnswer: number = 0;
+	private _sliderPropertyAnswer: number;
 	private _listPickerProperty: number;
 
 	public get sliderPropertyAnswer(): number {
@@ -97,6 +97,9 @@ export class QuestionViewModel extends Observable {
 		}
 
 		this.switchProperty = true;
+		if(this.type === "slider"){
+			this.sliderPropertyAnswer=0;
+		}
 	}
 
 	public questionIsAnswered(): boolean {
@@ -329,12 +332,13 @@ export class QuestionsViewModel extends Observable {
 			return 2;
 		} else if (sum >= 10 && sum < 13) {
 			return 3;
-		} else if (sum >= 13 && sum < 10) {
+		} else if (sum >= 13 ) {
 			return 4;
 		}
 	}
 
 	public finishQuiz() {
+		console.log("switch "+this.currentQuestion.switchProperty);
 		if (!this.currentQuestion.switchProperty) {
 			confirm({
 				title: "Unbelievable",
@@ -342,16 +346,17 @@ export class QuestionsViewModel extends Observable {
 				okButtonText: "Absolutely",
 				cancelButtonText: "Nope"
 			}).then(result => {
+				console.log("result "+result);
 				if (result) {
 					console.log("about to take picture dialog");
 					var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));
 					this.makePicture(joke);
 				}
 				else {
-					//generate randon picture with a joke					
-					var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));
-
+					//generate randon picture with a joke		
 					console.log("generate random picture");
+					console.log("sum "+this.sum);
+					var joke = this.jokesViewModel.getRandomJoke(this.jokeCategoryFromSum(this.sum));
 
 					var img = fromFile("~/images/frame.jpg");
 					
