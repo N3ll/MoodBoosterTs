@@ -19,10 +19,14 @@ TextField {
 Label{
     vertical-align: bottom;
     horizontal-align: left;
-    margin-top: 5;
-    margin-bottom: 5;
-    margin-left: 20;
-    margin-right: 20;
+    margin-top: 2;
+    margin-bottom: 2;
+    margin-left: 10;
+    margin-right: 10;
+    padding-left: 10;
+    padding-right: 10;
+    padding-bottom: 2;
+    padding-top: 2;
 }
 
 Image{
@@ -77,10 +81,21 @@ Image{
 
 .btnAnswers{
     color:black;
-    font-weight: bold;    
     background-image: url("~/images/bg.jpg");
     background-size: contain;
     padding: 15;
+}
+
+.progress{
+    margin-top: 0;
+    margin-bottom:00;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    horizontal-align: center;
 }
 
 #slider{
@@ -95,8 +110,18 @@ Image{
     horizontal-align: center;    
 }
 
-.selected {
-    background-color: red;
+.selectedQ3 {
+    background-image: url("~/images/bg.jpg");
     font-weight: bold;    
-    
+    color: black;
+    border-color: pink;
+    border-width: 2;
+     background-size: contain;
+}
+
+.selectedQ2{
+    font-weight: bold;    
+    color: black;
+    background-image: url("~/images/bg2.png");    
+    background-size: contain;
 }

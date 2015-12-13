@@ -49,16 +49,17 @@ export class SignupViewModel extends Observable {
 	}
 
 	public signUp() {
-		if (!this.loadingCounter.beginLoading()) return;
+		if (this.loadingCounter.isLoading) return;
+		this.loadingCounter.beginLoading();
 		console.log(`register, email: ${this.email}, password: ${this.password}`);
 		el.Users.register(this.email, this.password)
-			.then(function() {
+			.then(() => {
 				this.loadingCounter.endLoading();
 				console.log(`register success, email: ${this.email}, password: ${this.password}`);
 				frameModule.topmost().navigate("./views/options/options");
 			})
-			.catch(function(error) {
-				console.log(JSON.stringify(error));
+			.catch(error => {
+				console.log("error"+JSON.stringify(error));
 				this.loadingCounter.endLoading();
 			})
 	}

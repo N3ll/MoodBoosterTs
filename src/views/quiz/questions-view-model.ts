@@ -13,25 +13,27 @@ import {JokesViewModel} from "../jokes/jokes-view-model";
 import {knownFolders, path} from "file-system";
 import {fromFile} from "image-source";
 
-interface Answer {
-	answer: string;
-	weight: number;
-	id: string;
-}
+export class AnswerViewModel extends Observable{
+	public answer: string;
+	public weight: number;
+	public id: string;
+	public isTheAnswer: boolean;
 
-interface Question {
-	question: string;
-	type: string;
-	answers: Answer[];
-	id: string;
+	public constructor(everLiveAnswer:any){
+		super();
+		this.id = <string>everLiveAnswer.Id,
+		this.answer = <string>everLiveAnswer.Answer,
+		this.weight = <number>everLiveAnswer.Weight,
+		this.isTheAnswer = false
+	}
 }
 
 export class QuestionViewModel extends Observable {
 	public id: string;
 	public question: string;
 	public type: string;
-	public answers: Answer[];
-	public chosenAnswer: Answer;
+	public answers: AnswerViewModel[];
+	public chosenAnswer: AnswerViewModel;
 
 	public listPickerItems;
 	public answerString: string;
@@ -73,11 +75,7 @@ export class QuestionViewModel extends Observable {
 
 		this.answers = [];
 		for (var index2 = 0; index2 < everliveQuestion.Answers.length; index2++) {
-			var tempAnswer = {
-				id: <string>everliveQuestion.Answers[index2].Id,
-				answer: <string>everliveQuestion.Answers[index2].Answer,
-				weight: <number>everliveQuestion.Answers[index2].Weight,
-			};
+			var tempAnswer = new AnswerViewModel(everliveQuestion.Answers[index2]);
 			this.answers.push(tempAnswer);
 		}
 
@@ -319,7 +317,10 @@ export class QuestionsViewModel extends Observable {
 		this.currentQuestion.answers.forEach(answer => {
 			if (answer.id === idAnswer) {
 				this.currentQuestion.chosenAnswer = answer;
+				answer.set("isTheAnswer",true);
 				console.log("tapped answer is saved")
+			}else{
+				answer.set("isTheAnswer",false);
 			}
 		});
 	}

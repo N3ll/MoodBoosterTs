@@ -1,6 +1,6 @@
 <Page navigatingTo="navigatingTo" loaded="loaded">
 	<GridLayout columns="*,*" rows="auto,auto,*,auto">
-		<Label text="{{ currentQuestionIndex + 1 + ' of ' + questions.length }}" row="0" colSpan="2" horizontalAlignment="center" visibility="{{ loadingCounter.isLoading ? 'collapsed' : 'visible' }}" />
+		<Label text="{{ currentQuestionIndex + 1 + ' of ' + questions.length }}" row="0" colSpan="2" visibility="{{ loadingCounter.isLoading ? 'collapsed' : 'visible' }}" class="progress" />
 		<Progress value="{{ progress }}" maxValue="5" row="1" colSpan="2" visibility="{{ loadingCounter.isLoading ? 'collapsed' : 'visible' }}" />
 
 		<ScrollView id="scroll" row="2" colSpan="2" visibility="{{ visibleQ1 }}">
@@ -23,7 +23,7 @@
 						<StackLayout/>
 					</Repeater.itemsLayout>
 					<Repeater.itemTemplate>
-						<Label text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" />
+						<Label text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" class="{{ isTheAnswer ? 'selectedQ2' : ''}}"/>
 					</Repeater.itemTemplate>
 				</Repeater>
 			</StackLayout>
@@ -38,7 +38,7 @@
 						<WrapLayout  />
 					</Repeater.itemsLayout>
 					<Repeater.itemTemplate>
-						<Button text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" rotate="-10" class="btnAnswers"/>
+						<Button text="{{ answer }}" idAnswer="{{ id }}" textWrap="true" tap="saveAnswer" rotate="-10" class="{{ isTheAnswer ? 'selectedQ3' : 'btnAnswers'}}"/>
 					</Repeater.itemTemplate>
 				</Repeater>
 			</StackLayout>
@@ -65,7 +65,7 @@
 						<Label text="{{ answer }}" textWrap="true" horizontalAlignment="center"/>
 					</Repeater.itemTemplate>
 				</Repeater>
-				<Switch col="2" checked="{{ switchProperty }}" />
+				<Switch col="2" checked="{{ switchProperty }}" horizontalAlignment="center"/>
 				<Button text="FINISH" tap="{{ finishQuiz }}"/>
 			</StackLayout>
 		</ScrollView>
